@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 
+import java.util.ArrayList;
+
 /**
  * Main activity demonstrating how to pass extra parameters to an activity that
  * recognizes text.
@@ -40,8 +42,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private static final int RC_OCR_CAPTURE = 9003;
     private static final String TAG = "MainActivity";
-
-    private final String USER_AGENT = "Mozilla/5.0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,20 +105,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     statusMessage.setText(R.string.ocr_success);
                     System.out.println(text);
 
+                    String t = text.replaceAll("\n", " ");
+
                     // Establecer la conexion con el servidor
-                    ConexionServidor hilo_con = new ConexionServidor(text);
-                    hilo_con.start();
+                    ConexionServidor hilo_conexion = new ConexionServidor(t, "definicion");
+                    hilo_conexion.start();
 
                     try {
-                        hilo_con.join();
+                        hilo_conexion.join();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    System.out.println(hilo_con.text_result);
+                    // System.out.println(hilo_con.text_result);
 
+                    ArrayList<String> result = hilo_conexion.getResultado();
+                    String re = "";
+
+
+                    for (String r : result) {
+                        re += "* " + r + "\n";
+                    }
+
+                    textValue.setText(re);
                     // Valor devuelto de la conexion
-                    textValue.setText(hilo_con.text_result);
 
                     Log.d(TAG, "Text read: " + text);
                 } else {
