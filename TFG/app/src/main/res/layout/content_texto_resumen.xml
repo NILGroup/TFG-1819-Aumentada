@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".TextoResumenActivity"
+    tools:showIn="@layout/activity_texto_resumen">
+
+
+    <LinearLayout
+        android:id="@+id/layout_texto_resumen"
+        android:layout_width="match_parent"
+        android:layout_height="407dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout_resumen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:id="@+id/text_texto_opcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/texto_opcion_resumen"
+            android:textSize="25sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="?android:attr/listDivider" />
+
+        <ScrollView
+            android:layout_width="354dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/layout_resumen_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_result_resumen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="25sp" />
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/frameLayout_resumen"
+        android:layout_width="match_parent"
+        android:layout_height="211dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <Button
+            android:id="@+id/button_Rfrases"
+            android:layout_width="165dp"
+            android:layout_height="55dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/boton_pulsado"
+            android:text="@string/boton_palabras"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/button_Roriginal"
+            android:layout_width="355dp"
+            android:layout_height="55dp"
+            android:layout_above="@+id/button_Rpalabras"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/boton_pulsado"
+            android:text="@string/boton_original"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/button_Rpalabras"
+            android:layout_width="165dp"
+            android:layout_height="55dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/boton_pulsado"
+            android:text="@string/boton_frases"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/imageView_Raudio"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/boton_audio"
+            app:srcCompat="@drawable/audio" />
+
+        <ImageView
+            android:id="@+id/imageView_RmayusA"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="90dp"
+            android:contentDescription="@string/boton_mayusA"
+            app:srcCompat="@drawable/mayus" />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

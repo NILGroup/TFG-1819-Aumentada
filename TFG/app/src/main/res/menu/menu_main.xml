@@ -3,15 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/ajustes"
+        android:contentDescription="@string/ajustes_menu"
+        android:title="@string/ajustes_menu"></item>
 
     <item
-        android:id="@+id/action_about_us"
-        android:orderInCategory="100"
-        android:title="@string/about_us"
-        app:showAsAction="never" />
+        android:id="@+id/about_us"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="@string/about_us_menu"></item>
 
 </menu>

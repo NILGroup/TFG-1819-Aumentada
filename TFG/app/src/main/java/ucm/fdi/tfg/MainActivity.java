@@ -1,13 +1,19 @@
 package ucm.fdi.tfg;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.MenuItem;;
 import android.widget.CompoundButton;
+
+import java.util.ArrayList;
+
+import ucm.fdi.tfg.ocr.OcrCaptureActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener  {
 
@@ -15,12 +21,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // Use a compound button so either checkbox or switch widgets work.
     private CompoundButton autoFocus;
     private CompoundButton useFlash;
-    // private TextView statusMessage;
-    // private TextView textValue;
 
-    private static final int RC_OCR_CAPTURE = 9003;
-    private static final String TAG = "MainActivity";
-
+    // Para el menú
+    private String[] elementos_menu;
+    private boolean[] elementos_seleccionados;
+    private ArrayList<Integer> elementos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +34,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // statusMessage = (TextView) findViewById(R.id.status_message);
-        // textValue = (TextView) findViewById(R.id.text_value);
+        autoFocus = findViewById(R.id.auto_focus);
+        useFlash = findViewById(R.id.use_flash);
 
-        autoFocus = (CompoundButton) findViewById(R.id.auto_focus);
-        useFlash = (CompoundButton) findViewById(R.id.use_flash);
+        findViewById(R.id.imageView_camara).setOnClickListener(this);
 
-        findViewById(R.id.read_text).setOnClickListener(this);
+        elementos_menu = getResources().getStringArray(R.array.array_menu);
+        elementos_seleccionados = new boolean[elementos_menu.length];
 
     }
+
 
     /**
      * Called when a view has been clicked.
@@ -46,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.read_text) {
+        if (v.getId() == R.id.imageView_camara) {
             // launch Ocr capture activity.
             Intent intent = new Intent(this, OcrCaptureActivity.class);
             intent.putExtra(OcrCaptureActivity.AutoFocus, autoFocus.isChecked());
@@ -58,29 +64,198 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
-    /**
-     * Called when an activity you launched exits, giving you the requestCode
-     * you started it with, the resultCode it returned, and any additional
-     * data from it.  The <var>resultCode</var> will be
-     * {@link #RESULT_CANCELED} if the activity explicitly returned that,
-     * didn't return any result, or crashed during its operation.
-     * <p/>
-     * <p>You will receive this call immediately before onResume() when your
-     * activity is re-starting.
-     * <p/>
-     *
-     * requestCode The integer request code originally supplied to
-     *                    startActivityForResult(), allowing you to identify who this
-     *                    result came from.
-     * resultCode  The integer result code returned by the child activity
-     *                    through its setResult().
-     * data        An Intent, which can return result data to the caller
-     *                    (various data can be attached to Intent "extras").
-     * @see #startActivityForResult
-     * @see #createPendingResult
-     * @see #setResult(int)
-     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.ajustes:
+                    pulsarBotonAjustes();
+                    break;
+                case R.id.about_us:
+                    pulsarBotonAboutUs();
+                    break;
+            }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void pulsarBotonAboutUs() {
+        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(MainActivity.this);
+        adBuilder.setTitle("LeeFácil");
+        adBuilder.setMessage("HOLAAA");
+        adBuilder.setCancelable(false);
+        adBuilder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog ad = adBuilder.create();
+        ad.show();
+    }
+
+    private void pulsarBotonAjustes() {
+        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(MainActivity.this);
+        adBuilder.setTitle("SELECCIONA LAS OPCIONES");
+        adBuilder.setMultiChoiceItems(elementos_menu, elementos_seleccionados, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if(isChecked){
+                    if (!elementos.contains(which)){
+                        elementos.add(which);
+                    }
+                    else {
+                        elementos.remove(which);
+                    }
+                }
+            }
+        });
+        adBuilder.setCancelable(false);
+        adBuilder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        adBuilder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        adBuilder.setNeutralButton("SELECCIONAR TODO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for(int i = 0; i < elementos_seleccionados.length; i++) {
+                    elementos_seleccionados[i] = true;
+                }
+            }
+        });
+
+        AlertDialog ad = adBuilder.create();
+        ad.show();
+    }
+
+}
+
+
+/**
+ * private void fillList() {
+ *         checkTextAdapter = new CheckTextAdapter();
+ *
+ *         for(String f : qqq.split(" ")) {
+ *             checkTextAdapter.addFrase(f);
+ *         }
+ *         checkTextAdapter.iniSeleccionadas();
+ *
+ *         lista.setAdapter(checkTextAdapter);
+ *     }
+ *
+ *
+ *     private class CheckTextAdapter extends BaseAdapter {
+ *
+ *         private ArrayList<String> palabras = new ArrayList<String>();
+ *         private LayoutInflater layoutInflater;
+ *         private boolean[] p_seleccionada;
+ *
+ *         public CheckTextAdapter() {
+ *             super();
+ *             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+ *         }
+ *
+ *         public void addFrase(String palabra){
+ *             palabras.add(palabra);
+ *             notifyDataSetChanged();
+ *         }
+ *
+ *         public void iniSeleccionadas() {
+ *             p_seleccionada = new boolean[palabras.size()];
+ *         }
+ *
+ *
+ *         public String getPalabrasSeleccionadas() {
+ *
+ *             String palabras_seleccionadas = "";
+ *
+ *             for (int i = 0; i < p_seleccionada.length; i++) {
+ *                 if (p_seleccionada[i]) {
+ *                     palabras_seleccionadas += palabras.get(i);
+ *                 }
+ *             }
+ *
+ *             return palabras_seleccionadas;
+ *         }
+ *
+ *         @Override
+ *         public int getCount() {
+ *             return palabras.size();
+ *         }
+ *
+ *         @Override
+ *         public Object getItem(int position) {
+ *             return palabras.get(position).toString();
+ *         }
+ *
+ *         @Override
+ *         public long getItemId(int position) {
+ *             return position;
+ *         }
+ *
+ *         @Override
+ *         public View getView(final int position, View convertView, ViewGroup parent) {
+ *             convertView = layoutInflater.inflate(R.layout.fila, null);
+ *             final ViewHolder holder = new ViewHolder();
+ *             holder.txtItem = convertView.findViewById(R.id.text_palabras);
+ *             holder.txtItem.setOnClickListener(new View.OnClickListener() {
+ *                 @Override
+ *                 public void onClick(View v) {
+ *                     holder.txtItem.setText("JEJEJEJE");
+ *                 }
+ *             });
+ *
+ *             convertView.setTag(holder);
+ *             return convertView;
+ *         }
+ *
+ *     }
+ *
+ *
+ *     public static class ViewHolder {
+ *         public TextView txtItem;
+ *     }
+ */
+
+/**
+ * Called when an activity you launched exits, giving you the requestCode
+ * you started it with, the resultCode it returned, and any additional
+ * data from it.  The <var>resultCode</var> will be
+ * {@link #RESULT_CANCELED} if the activity explicitly returned that,
+ * didn't return any result, or crashed during its operation.
+ * <p/>
+ * <p>You will receive this call immediately before onResume() when your
+ * activity is re-starting.
+ * <p/>
+ *
+ * requestCode The integer request code originally supplied to
+ *                    startActivityForResult(), allowing you to identify who this
+ *                    result came from.
+ * resultCode  The integer result code returned by the child activity
+ *                    through its setResult().
+ * data        An Intent, which can return result data to the caller
+ *                    (various data can be attached to Intent "extras").
+ * @see #startActivityForResult
+ * @see #createPendingResult
+ * @see #setResult(int)
+ */
    /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == RC_OCR_CAPTURE) {
@@ -93,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String t = text.replaceAll("\n", " ");
 
                     // Establecer la conexion con el servidor
-                    ConexionAPI hilo_conexion = new ConexionAPI(t, "definicion");
+                    ConexionSESAT hilo_conexion = new ConexionSESAT(t, "definicion");
                     hilo_conexion.start();
 
                     try {
@@ -129,26 +304,3 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.onActivityResult(requestCode, resultCode, data);
         }
     }*/
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-}
