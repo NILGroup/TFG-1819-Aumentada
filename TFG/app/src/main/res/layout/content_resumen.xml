@@ -83,12 +83,22 @@
         android:layout_height="146dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:paddingLeft="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
+
+        <Button
+            android:id="@+id/button_spacy"
+            android:layout_width="131dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="30dp"
+            android:background="@drawable/boton_pulsado"
+            android:text="Spacy" />
 
         <Button
             android:id="@+id/button_sinonimo"
@@ -104,22 +114,23 @@
 
         <Button
             android:id="@+id/button_definicion"
-            android:layout_width="140dp"
-            android:layout_height="51dp"
+            android:layout_width="145dp"
+            android:layout_height="46dp"
             android:layout_above="@+id/button_sinonimo"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginStart="213dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="22dp"
             android:background="@drawable/boton_pulsado"
             android:text="@string/definicion"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/button_antonimo"
-            android:layout_width="140dp"
-            android:layout_height="50dp"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="30dp"

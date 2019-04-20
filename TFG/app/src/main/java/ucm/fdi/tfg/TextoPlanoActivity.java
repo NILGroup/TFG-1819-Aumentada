@@ -10,8 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.speech.tts.TextToSpeech;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import ucm.fdi.tfg.frases.FrasesActivity;
 import ucm.fdi.tfg.ocr.OcrCaptureActivity;
@@ -22,6 +25,7 @@ public class TextoPlanoActivity extends AppCompatActivity {
     public final static String MAYUS = "MAYUS";
 
     private TextView text_result;
+    private TextToSpeech tts;
 
     private ImageView imageView_audio;
     private ImageView imageView_mayusA;
@@ -55,14 +59,22 @@ public class TextoPlanoActivity extends AppCompatActivity {
         t = text.replaceAll("\n", " ");
         text_result.setText(t);
 
-
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR)
+                    tts.setLanguage(new Locale("spa","ESP"));
+            }
+        });
 
 
         // ******** TEXT TO SPEECH ********
         imageView_audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Aqui añadir la funcionalidad del speech
+                String speak = text_result.getText().toString();
+                Toast.makeText(getApplicationContext(), speak, Toast.LENGTH_SHORT).show();
+                tts.speak(speak, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
 
