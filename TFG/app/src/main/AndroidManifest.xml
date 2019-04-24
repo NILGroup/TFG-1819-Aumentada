@@ -16,6 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".palabras.PalabrasAccionActivity">
+
+        </activity>
+
+        <activity
+            android:name=".palabras.PalabrasActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".TextoResumenActivity"
             android:label="@string/app_name"
@@ -25,11 +38,18 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".frases.PictosActivity" />
-        <activity android:name=".frases.FrasesActivity" />
+        <activity android:name=".frases.FrasesPictosActivity" />
+        <activity
+            android:name=".frases.FrasesActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
         <activity
-            android:name=".TextoPlanoActivity"
+            android:name=".TextoOriginalActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

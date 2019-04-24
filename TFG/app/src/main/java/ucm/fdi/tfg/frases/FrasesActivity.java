@@ -1,10 +1,15 @@
 package ucm.fdi.tfg.frases;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,54 +18,77 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import ucm.fdi.tfg.R;
-import ucm.fdi.tfg.TextoPlanoActivity;
-import ucm.fdi.tfg.TextoResumenActivity;
+import ucm.fdi.tfg.VARIABLES.Variables;
 
-public class FrasesActivity extends AppCompatActivity{
-
-    public final static String FRASES_SELECCIONADAS = "FRASES";
-    public final static String MAYUS = "MAYUS";
-
-    private Button button_pictogramas;
-    private Button button_palabras;
+public class FrasesActivity extends AppCompatActivity {
 
     private CheckListAdapter checkListAdapter;
     private ListView listView_frases;
 
+    private String texto_frases;
     private boolean mayus;
+
+    // Para el menú
+    private String[] elementos_menu;
+    private boolean[] elementos_seleccionados;
+
+    private boolean[] checkBox_seleccionados;
 
 
     @Override
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_frases);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        button_pictogramas = findViewById(R.id.button_pictogramas);
-        button_palabras    = findViewById(R.id.button_palabras);
+        Button button_pictogramas = findViewById(R.id.button_pictogramas_frases);
+        Button button_palabra     = findViewById(R.id.button_palabra_frases);
 
-        listView_frases = findViewById(R.id.lista_frase);
+        listView_frases = findViewById(R.id.listView_frases);
 
         // Texto capturado
-        final String texto = getIntent().getStringExtra(TextoPlanoActivity.FRASES);
-        mayus = getIntent().getBooleanExtra(TextoResumenActivity.MAYUS, false);
+        texto_frases = getIntent().getStringExtra(Variables.FRASES);
+        mayus = getIntent().getBooleanExtra(Variables.MAYUS, false);
 
-        //String texto = "Google Cloud Vision API realiza un análisis de diseño en la imagen para segmentar la ubicación del texto. Una vez que se detecta la ubicación general, el módulo OCR realiza un análisis de reconocimiento de texto en la ubicación especificada para generar el texto. Finalmente, los errores se corrigen en un paso de procesamiento posterior introduciéndolos a través de un modelo de idioma o diccionario. Todo esto se realiza a través de una red neuronal convolucional en la que cada neurona solo está conectada a un subconjunto de neuronas en cada capa. Las redes neuronales convolucionales son un subconjunto de redes neuronales y pretenden imitar la estructura jerárquica de nuestra corteza visual en la forma en que identificamos los objetos.";
-        //String texto = "Caperucita Roja vivía en el bosque. Le gustaba saltar a la pata coja. Se comía su comida y le hacía caso a su mamá";
+        //String texto_frases = "Google Cloud Vision API realiza un análisis de diseño en la imagen para segmentar la ubicación del texto. Una vez que se detecta la ubicación general, el módulo OCR realiza un análisis de reconocimiento de texto en la ubicación especificada para generar el texto. Finalmente, los errores se corrigen en un paso de procesamiento posterior introduciéndolos a través de un modelo de idioma o diccionario. Todo esto se realiza a través de una red neuronal convolucional en la que cada neurona solo está conectada a un subconjunto de neuronas en cada capa. Las redes neuronales convolucionales son un subconjunto de redes neuronales y pretenden imitar la estructura jerárquica de nuestra corteza visual en la forma en que identificamos los objetos.";
+        //String texto_frases = "Caperucita Roja vivía en el bosque. Le gustaba saltar a la pata coja. Se comía su comida y le hacía caso a su mamá";
 
-        // Rellenar los check box con las frases
-        fillList(texto);
+        // Rellenar los check box con las frases. True porque se inicializa por primera vez
+        fillList(true);
+
 
         // ******** PASAR A PICTOS ********
         button_pictogramas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pulsarBotonPictogramas();
+                int cont = 0, i = 0;
+                while (cont == 0 && i < checkBox_seleccionados.length) {
+                    if (checkBox_seleccionados[i]) {
+                        cont++;
+                    }
+                    i++;
+                }
+                if (cont > 0) {
+                    pulsarBotonPictogramas();
+                }
+                else {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(),
+                                    "Selecciona una frase", Toast.LENGTH_SHORT);
+                    toast1.show();
+                }
+
             }
         });
+
+
+        // ******** PASAR A PALABRA ********
 
     }
 
@@ -69,34 +97,32 @@ public class FrasesActivity extends AppCompatActivity{
      *  Pasará al Activity Pictos.
      */
     private void pulsarBotonPictogramas() {
-        Intent intent = new Intent(this, PictosActivity.class);
-        intent.putExtra(FrasesActivity.FRASES_SELECCIONADAS, checkListAdapter.getFrasesSeleccionadas());
-        intent.putExtra(FrasesActivity.MAYUS, mayus);
+        Intent intent = new Intent(this, FrasesPictosActivity.class);
+        intent.putExtra(Variables.FRASES, checkListAdapter.getFrasesSeleccionadas());
+        intent.putExtra(Variables.MAYUS, mayus);
         startActivity(intent);
     }
 
 
-
     /**
      * Rellenar los check box con cada una de las frases
-     * @param texto Se pasa el texto completo, y se dividirá por frases
-     *              para mostrarlo.
+     * @param ini Se pasa un booleano para saber si es la primera vez que
+     *            se iniciliza la lista.
      */
-    private void fillList(String texto) {
+    private void fillList(boolean ini) {
         checkListAdapter = new CheckListAdapter();
-        for(String f : texto.split("\\.")) {
+        for(String f : texto_frases.split("\\.")) {
             checkListAdapter.addFrase(f);
         }
-        checkListAdapter.iniSeleccionadas();
+        checkListAdapter.iniSeleccionadas(ini);
         listView_frases.setAdapter(checkListAdapter);
     }
 
 
     private class CheckListAdapter extends BaseAdapter {
 
-        private ArrayList<String> frases = new ArrayList<String>();
+        private ArrayList<String> frases = new ArrayList<>();
         private LayoutInflater layoutInflater;
-        private boolean[] seleccionadas;
 
         CheckListAdapter() {
             super();
@@ -108,8 +134,10 @@ public class FrasesActivity extends AppCompatActivity{
             notifyDataSetChanged();
         }
 
-        void iniSeleccionadas() {
-            seleccionadas = new boolean[frases.size()];
+        void iniSeleccionadas(boolean ini) {
+            if (ini) {
+                checkBox_seleccionados = new boolean[frases.size()];
+            }
         }
 
 
@@ -117,8 +145,8 @@ public class FrasesActivity extends AppCompatActivity{
 
             String frases_seleccionadas = "";
 
-            for (int i = 0; i < seleccionadas.length; i++) {
-                if (seleccionadas[i]) {
+            for (int i = 0; i < checkBox_seleccionados.length; i++) {
+                if (checkBox_seleccionados[i]) {
                     frases_seleccionadas += frases.get(i);
                 }
             }
@@ -133,7 +161,7 @@ public class FrasesActivity extends AppCompatActivity{
 
         @Override
         public Object getItem(int position) {
-            return frases.get(position).toString();
+            return frases.get(position);
         }
 
         @Override
@@ -143,14 +171,14 @@ public class FrasesActivity extends AppCompatActivity{
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView = layoutInflater.inflate(R.layout.fila, null);
+            convertView = layoutInflater.inflate(R.layout.fila_frases, null);
             final ViewHolder holder = new ViewHolder();
-            holder.chkItem = (CheckBox) convertView.findViewById(R.id.check_frases);
+            holder.chkItem = convertView.findViewById(R.id.check_frases);
             holder.chkItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     // Array de seleccionadas, cuando se selecciona una frase se actualiza
-                    seleccionadas[position] = holder.chkItem.isChecked();
+                    checkBox_seleccionados[position] = holder.chkItem.isChecked();
                 }
             });
 
@@ -160,18 +188,109 @@ public class FrasesActivity extends AppCompatActivity{
                     holder.chkItem.getPaddingRight(),
                     holder.chkItem.getPaddingBottom());
 
-            holder.chkItem.setChecked(seleccionadas[position]);
+            holder.chkItem.setChecked(checkBox_seleccionados[position]);
             convertView.setTag(holder);
             holder.chkItem.setText((String)getItem(position));
+
             return convertView;
         }
 
     }
 
-
     public static class ViewHolder {
         CheckBox chkItem;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_ajustes:
+                pulsarBotonAjustes();
+                break;
+            case R.id.item_about_us:
+                pulsarBotonAboutUs();
+                break;
+            case R.id.item_mayus:
+                pulsarItemMayus();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void pulsarItemMayus(){
+        // Cambia mayusculas o minusculas segun pulsemos el boton
+        if (mayus) {
+            mayus = false;
+            texto_frases = texto_frases.toLowerCase();
+        }
+        else {
+            mayus = true;
+            texto_frases = texto_frases.toUpperCase();
+        }
+        fillList(false);
+    }
+
+    private void pulsarBotonAboutUs() {
+        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(FrasesActivity.this);
+        adBuilder.setTitle("LeeFácil");
+        adBuilder.setMessage("HOLAAA");
+        adBuilder.setCancelable(false);
+        adBuilder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog ad = adBuilder.create();
+        ad.show();
+    }
+
+    private void pulsarBotonAjustes() {
+        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(FrasesActivity.this);
+        adBuilder.setTitle("SELECCIONA LAS OPCIONES");
+        adBuilder.setMultiChoiceItems(elementos_menu, elementos_seleccionados, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                /*if(isChecked){
+
+                }*/
+            }
+        });
+        adBuilder.setCancelable(false);
+        adBuilder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        adBuilder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        adBuilder.setNeutralButton("SELECCIONAR TODO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for(int i = 0; i < elementos_seleccionados.length; i++) {
+                    elementos_seleccionados[i] = true;
+                }
+            }
+        });
+
+        AlertDialog ad = adBuilder.create();
+        ad.show();
+    }
 
 }

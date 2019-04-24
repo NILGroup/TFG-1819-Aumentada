@@ -15,6 +15,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
+import org.json.JSONObject;
+
 public class ConexionSESAT extends Thread {
 
     private String texto;
@@ -70,16 +72,13 @@ public class ConexionSESAT extends Thread {
 
             String inputLine;
 
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
 
             while ((inputLine = in.readLine()) != null) {
-                System.out.println(inputLine);
                 response.append(inputLine);
             }
 
             in.close();
-
-            System.out.println(response.toString());
 
             con.disconnect();
 

@@ -19,14 +19,16 @@ import java.util.Locale;
 
 import ucm.fdi.tfg.VARIABLES.Variables;
 import ucm.fdi.tfg.frases.FrasesActivity;
+import ucm.fdi.tfg.ocr.OcrCaptureActivity;
 import ucm.fdi.tfg.palabras.PalabrasActivity;
 
-public class TextoResumenActivity extends AppCompatActivity {
+public class TextoOriginalActivity extends AppCompatActivity {
 
-    TextView textView_resumen;
+    TextView textView_original;
     TextToSpeech tts;
 
-    private String texto_resumen = "";
+
+    private String texto_original = "";
     private boolean mayus = false;
 
     // Para el menú
@@ -37,24 +39,24 @@ public class TextoResumenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_texto_resumen);
+        setContentView(R.layout.activity_texto_original);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Botones
-        ImageView imageView_audio = findViewById(R.id.imageView_audio_resumen);
+        ImageView imageView_audio = findViewById(R.id.imageView_audio_original);
 
-        Button button_original = findViewById(R.id.button_original_resumen);
-        Button button_frases   = findViewById(R.id.button_frases_resumen);
-        Button button_palabras = findViewById(R.id.button_palabras_resumen);
+        Button button_resumen  = findViewById(R.id.button_resumen_original);
+        Button button_frases   = findViewById(R.id.button_frases_original);
+        Button button_palabras = findViewById(R.id.button_palabras_original);
 
         // Texto capurado
-        textView_resumen = findViewById(R.id.textView_resultado_resumen);
+        textView_original = findViewById(R.id.textView_resultado_original);
 
-        texto_resumen = getIntent().getStringExtra(Variables.FRASES);;
-        mayus = getIntent().getBooleanExtra(Variables.MAYUS, false);
+        final String text = getIntent().getStringExtra(OcrCaptureActivity.TextBlockObject);
 
-        textView_resumen.setText(texto_resumen);
+        texto_original = text.replaceAll("\n", " ");
+        textView_original.setText(texto_original);
 
 
         // Text to speech
@@ -75,18 +77,19 @@ public class TextoResumenActivity extends AppCompatActivity {
                     tts.stop();
                 } else {
                     Toast.makeText(getApplicationContext(), "Sonando audio", Toast.LENGTH_SHORT).show();
-                    tts.speak(texto_resumen, TextToSpeech.QUEUE_FLUSH, null);
+                    tts.speak(texto_original, TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
         });
 
-        // ******** PASAR A TEXTO ORIGINAL ********
-        button_original.setOnClickListener(new View.OnClickListener() {
+        // ******** PASAR A RESUMEN ********
+        button_resumen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                pasarASiguienteActivity("resumen");
             }
         });
+
 
         // ******** PASAR A PALABRAS ********
         button_palabras.setOnClickListener(new View.OnClickListener() {
@@ -118,12 +121,15 @@ public class TextoResumenActivity extends AppCompatActivity {
             case "palabras":
                 intent = new Intent(this, PalabrasActivity.class);
                 break;
+            case "resumen":
+                intent = new Intent(this, TextoResumenActivity.class);
+                break;
         }
 
         // Pasamos los datos:
         // 1. El texto completo
         // 2. Si esta en mayusculas o minusculas.
-        intent.putExtra(Variables.FRASES, texto_resumen);
+        intent.putExtra(Variables.FRASES, texto_original);
         intent.putExtra(Variables.MAYUS, mayus);
         // Lanzar activity
         startActivity(intent);
@@ -158,17 +164,17 @@ public class TextoResumenActivity extends AppCompatActivity {
         // Cambia mayusculas o minusculas segun pulsemos el boton
         if (mayus) {
             mayus = false;
-            texto_resumen = texto_resumen.toLowerCase();
+            texto_original = texto_original.toLowerCase();
         }
         else {
             mayus = true;
-            texto_resumen = texto_resumen.toUpperCase();
+            texto_original = texto_original.toUpperCase();
         }
-        textView_resumen.setText(texto_resumen);
+        textView_original.setText(texto_original);
     }
 
     private void pulsarBotonAboutUs() {
-        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(TextoResumenActivity.this);
+        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(TextoOriginalActivity.this);
         adBuilder.setTitle("LeeFácil");
         adBuilder.setMessage("HOLAAA");
         adBuilder.setCancelable(false);
@@ -184,7 +190,7 @@ public class TextoResumenActivity extends AppCompatActivity {
     }
 
     private void pulsarBotonAjustes() {
-        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(TextoResumenActivity.this);
+        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(TextoOriginalActivity.this);
         adBuilder.setTitle("SELECCIONA LAS OPCIONES");
         adBuilder.setMultiChoiceItems(elementos_menu, elementos_seleccionados, new DialogInterface.OnMultiChoiceClickListener() {
             @Override

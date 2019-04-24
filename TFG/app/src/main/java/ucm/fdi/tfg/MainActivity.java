@@ -8,8 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
-import android.view.MenuItem;;
+import android.view.MenuItem;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String[] elementos_menu;
     private boolean[] elementos_seleccionados;
     private ArrayList<Integer> elementos = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +76,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.ajustes:
+                case R.id.item_ajustes:
                     pulsarBotonAjustes();
                     break;
-                case R.id.about_us:
+                case R.id.item_about_us:
                     pulsarBotonAboutUs();
+                    break;
+                case R.id.item_mayus:
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(),
+                                    "Captura un texto", Toast.LENGTH_SHORT);
+
+                    toast1.show();
                     break;
             }
 
@@ -148,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 }
 
 
-/**
+/*
  * private void fillList() {
  *         checkTextAdapter = new CheckTextAdapter();
  *
@@ -212,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
  *
  *         @Override
  *         public View getView(final int position, View convertView, ViewGroup parent) {
- *             convertView = layoutInflater.inflate(R.layout.fila, null);
+ *             convertView = layoutInflater.inflate(R.layout.fila_frases, null);
  *             final ViewHolder holder = new ViewHolder();
  *             holder.txtItem = convertView.findViewById(R.id.text_palabras);
  *             holder.txtItem.setOnClickListener(new View.OnClickListener() {
@@ -234,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
  *     }
  */
 
-/**
+/*
  * Called when an activity you launched exits, giving you the requestCode
  * you started it with, the resultCode it returned, and any additional
  * data from it.  The <var>resultCode</var> will be

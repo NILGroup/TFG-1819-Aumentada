@@ -18,28 +18,43 @@
     <string name="definicion">DEFINICIÓN</string>
     <string name="selecciona_botones">Selecciona una opción</string>
 
-
     <!-- MAIN -->
     <string name="auto_focus">Auto Focus</string>
     <string name="use_flash">Usar Flash</string>
     <string name="boton_camera">Hacer foto</string>
 
-    <!-- ACTIVITY TEXTO PLANO -->
-    <string name="texto_opcion">TEXTO ORIGINAL</string>
-    <string name="boton_frases">PALABRAS</string>
-    <string name="boton_palabras">FRASES</string>
-    <string name="boton_resumen">RESUMEN</string>
-    <string name="boton_audio">AUDIO</string>
-    <string name="boton_mayusA">PASAR A MINÚSCULAS</string>
+    <!-- ACTIVITY TEXTO ORIGINAL -->
+    <string name="texto_original">TEXTO ORIGINAL</string>
+    <string name="boton_frases_original">PALABRA</string>
+    <string name="boton_palabras_original">FRASES</string>
+    <string name="boton_resumen_original">RESUMEN</string>
+    <string name="boton_audio_original">AUDIO</string>
 
+    <!-- ACTIVITY TEXTO RESUMEN -->
+    <string name="texto_resumen">TEXTO RESUMIDO</string>
+    <string name="boton_frases_resumen">PALABRA</string>
+    <string name="boton_palabras_resumen">FRASES</string>
+    <string name="boton_original_resumen">ORIGINAL</string>
+    <string name="boton_audio_resumen">AUDIO</string>
 
     <!-- ACTIVITY FRASES -->
     <string name="texto_frases">FRASES</string>
-    <string name="boton_pictogramas">PICTOS</string>
-    <string name="boton_lectura_facil">LF</string>
+    <string name="boton_pictogramas_frases">PICTOS</string>
+    <string name="boton_palabra_frases">PALABRA</string>
 
     <!-- ACTIVITY TRADUCCION FRASE -> PICTOS -->
     <string name="texto_pictos">TRADUCCIÓN A PICTOS</string>
+    <string name="imagen_pictos">Pictograma</string>
+
+    <!-- ACTIVITY PALABRAS -->
+    <string name="texto_palabras">SELECCIONA UNA PALABRA</string>
+    <string name="boton_definicion_palabras">DEFINICIÓN</string>
+    <string name="boton_dificultad_palabras">DIFICULTAD</string>
+    <string name="boton_sinonimos_palabras">SINÓNIMOS</string>
+    <string name="boton_antonimos_palabras">ANTÓNIMOS</string>
+
+
+
 
     <!-- MENU -->
     <string-array name="array_menu">
@@ -55,4 +70,5 @@
     <!-- RESUMEN -->
     <string name="boton_original">VOLVER A TEXTO ORIGINAL</string>
     <string name="texto_opcion_resumen">TEXTO RESUMIDO</string>
+    <string name="boton_mayusA">PASAR A MINÚSCULAS</string>
 </resources>

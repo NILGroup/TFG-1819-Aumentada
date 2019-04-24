@@ -5,37 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".palabras.PalabrasActivity"
-    tools:showIn="@layout/activity_palabras">
+    tools:context=".frases.FrasesPictosActivity"
+    tools:showIn="@layout/activity_frases_pictos">
+
 
     <LinearLayout
-        android:id="@+id/layout_palabras"
-        android:layout_width="395dp"
+        android:id="@+id/layout_pictos"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
         <TextView
-            android:id="@+id/textView_palabras"
+            android:id="@+id/textView_pictos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/texto_palabras"
-            android:textSize="23sp"
-            android:textStyle="bold" />
+            android:text="@string/texto_pictos"
+            android:textSize="23sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -49,19 +47,24 @@
             android:layout_marginEnd="20dp"
             android:background="?android:attr/listDivider" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
         <GridView
-            android:id="@+id/gridView_palabras"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/gridView_pictos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp"/>
+            android:horizontalSpacing="15dp"
+            android:numColumns="3"
+            android:saveEnabled="false"
+            android:verticalSpacing="30dp" />
+
 
     </LinearLayout>
-
 
 </android.support.constraint.ConstraintLayout>

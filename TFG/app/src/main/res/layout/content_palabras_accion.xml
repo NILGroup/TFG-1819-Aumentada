@@ -5,38 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".TextoResumenActivity"
-    tools:showIn="@layout/activity_texto_resumen">
-
+    tools:context=".palabras.PalabrasAccionActivity"
+    tools:showIn="@layout/activity_palabras_accion">
 
     <LinearLayout
-        android:id="@+id/layout_texto_resumen"
-        android:layout_width="395dp"
-        android:layout_height="434dp"
+        android:id="@+id/layout_palabras_accion"
+        android:layout_width="392dp"
+        android:layout_height="485dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout_resumen"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout_palabras"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
         <TextView
-            android:id="@+id/textView_resumen"
+            android:id="@+id/textView_palabras_accion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/texto_resumen"
-            android:textSize="23sp" />
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
         <Space
             android:layout_width="match_parent"
@@ -50,67 +50,61 @@
             android:layout_marginEnd="20dp"
             android:background="?android:attr/listDivider" />
 
-        <ScrollView
-            android:layout_width="354dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="1">
+        <LinearLayout
+            android:id="@+id/layout_palabras_accion_resultado"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="vertical">
 
-            <LinearLayout
-                android:id="@+id/layout_resumen_scroll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textView_resultado_resumen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="23sp" />
-            </LinearLayout>
-        </ScrollView>
 
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/frameLayout_resumen"
-        android:layout_width="396dp"
-        android:layout_height="148dp"
+        android:id="@+id/frameLayout_palabras"
+        android:layout_width="395dp"
+        android:layout_height="154dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:scrollbarAlwaysDrawHorizontalTrack="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView_audio_resumen"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_above="@+id/button_frases_resumen"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="81dp"
-            android:layout_marginBottom="15dp"
-            android:contentDescription="@string/boton_audio_resumen"
-            app:srcCompat="@drawable/audio" />
-
+        <!-- BOTON DEFINICION -->
         <Button
-            android:id="@+id/button_original_resumen"
+            android:id="@+id/button_definicion_palabras"
             android:layout_width="150dp"
             android:layout_height="55dp"
-            android:layout_above="@+id/button_palabras_resumen"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="15dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_original_resumen"
+            android:text="@string/boton_definicion_palabras"
             android:textSize="23sp" />
 
+        <!-- BOTON DIFICULTAD -->
         <Button
-            android:id="@+id/button_frases_resumen"
+            android:id="@+id/button_pictograma_palabras"
+            android:layout_width="150dp"
+            android:layout_height="55dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/boton_pulsado"
+            android:text="@string/boton_dificultad_palabras"
+            android:textSize="23sp" />
+
+        <!-- BOTON SINÓNIMOS -->
+        <Button
+            android:id="@+id/button_sinonimos_palabras"
             android:layout_width="150dp"
             android:layout_height="55dp"
             android:layout_alignParentStart="true"
@@ -118,11 +112,12 @@
             android:layout_marginStart="30dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_palabras_resumen"
+            android:text="@string/boton_sinonimos_palabras"
             android:textSize="23sp" />
 
+        <!-- BOTON ANTÓNIMOS -->
         <Button
-            android:id="@+id/button_palabras_resumen"
+            android:id="@+id/button_antonimos_palabras"
             android:layout_width="150dp"
             android:layout_height="55dp"
             android:layout_alignParentEnd="true"
@@ -130,7 +125,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_frases_resumen"
+            android:text="@string/boton_antonimos_palabras"
             android:textSize="23sp" />
 
     </RelativeLayout>

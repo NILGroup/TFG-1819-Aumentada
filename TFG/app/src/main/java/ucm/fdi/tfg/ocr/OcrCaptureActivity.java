@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -44,9 +43,9 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
 
 import ucm.fdi.tfg.R;
-import ucm.fdi.tfg.TextoPlanoActivity;
+import ucm.fdi.tfg.TextoOriginalActivity;
 import ucm.fdi.tfg.ui.camera.*;
-import ucm.fdi.tfg.ocr.*;
+
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
@@ -330,7 +329,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
             text = graphic.getTextBlock();
             if (text != null && text.getValue() != null) {
 
-                Intent data = new Intent(this, TextoPlanoActivity.class);
+                Intent data = new Intent(this, TextoOriginalActivity.class);
                 data.putExtra(TextBlockObject, text.getValue());
 
                 setResult(CommonStatusCodes.SUCCESS, data);

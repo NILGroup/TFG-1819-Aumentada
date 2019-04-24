@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".TextoResumenActivity"
-    tools:showIn="@layout/activity_texto_resumen">
+    tools:context=".TextoOriginalActivity"
+    tools:showIn="@layout/activity_texto_original">
 
 
     <LinearLayout
-        android:id="@+id/layout_texto_resumen"
+        android:id="@+id/layout_texto_original"
         android:layout_width="395dp"
         android:layout_height="434dp"
         android:layout_marginStart="8dp"
@@ -18,7 +18,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout_resumen"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout_original"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,12 +30,12 @@
             android:layout_height="10dp" />
 
         <TextView
-            android:id="@+id/textView_resumen"
+            android:id="@+id/textView_original"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/texto_resumen"
+            android:text="@string/texto_original"
             android:textSize="23sp" />
 
         <Space
@@ -59,13 +59,13 @@
             android:layout_weight="1">
 
             <LinearLayout
-                android:id="@+id/layout_resumen_scroll"
+                android:id="@+id/layout_original_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView_resultado_resumen"
+                    android:id="@+id/textView_resultado_original"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="23sp" />
@@ -75,7 +75,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/frameLayout_resumen"
+        android:id="@+id/frameLayout_original"
         android:layout_width="396dp"
         android:layout_height="148dp"
         android:layout_marginStart="8dp"
@@ -87,30 +87,30 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/imageView_audio_resumen"
+            android:id="@+id/imageView_audio_original"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:layout_above="@+id/button_frases_resumen"
+            android:layout_above="@+id/button_frases_original"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="81dp"
+            android:layout_marginStart="80dp"
             android:layout_marginBottom="15dp"
-            android:contentDescription="@string/boton_audio_resumen"
+            android:contentDescription="@string/boton_audio_original"
             app:srcCompat="@drawable/audio" />
 
         <Button
-            android:id="@+id/button_original_resumen"
+            android:id="@+id/button_resumen_original"
             android:layout_width="150dp"
             android:layout_height="55dp"
-            android:layout_above="@+id/button_palabras_resumen"
+            android:layout_above="@+id/button_palabras_original"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_original_resumen"
+            android:text="@string/boton_resumen_original"
             android:textSize="23sp" />
 
         <Button
-            android:id="@+id/button_frases_resumen"
+            android:id="@+id/button_frases_original"
             android:layout_width="150dp"
             android:layout_height="55dp"
             android:layout_alignParentStart="true"
@@ -118,11 +118,11 @@
             android:layout_marginStart="30dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_palabras_resumen"
+            android:text="@string/boton_palabras_original"
             android:textSize="23sp" />
 
         <Button
-            android:id="@+id/button_palabras_resumen"
+            android:id="@+id/button_palabras_original"
             android:layout_width="150dp"
             android:layout_height="55dp"
             android:layout_alignParentEnd="true"
@@ -130,7 +130,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_frases_resumen"
+            android:text="@string/boton_frases_original"
             android:textSize="23sp" />
 
     </RelativeLayout>

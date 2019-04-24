@@ -8,7 +8,6 @@
     tools:context=".frases.FrasesActivity"
     tools:showIn="@layout/activity_frases">
 
-
     <LinearLayout
         android:id="@+id/layout_frases"
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout_frases"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,13 +30,14 @@
             android:layout_height="10dp" />
 
         <TextView
-            android:id="@+id/text_texto_opcion"
+            android:id="@+id/textView_frases"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:text="@string/texto_frases"
-            android:textSize="25sp" />
+            android:textSize="23sp"
+            android:textStyle="bold"/>
 
         <Space
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:background="?android:attr/listDivider" />
 
         <ListView
-            android:id="@+id/lista_frase"
+            android:id="@+id/listView_frases"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
@@ -67,7 +67,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/frameLayout"
+        android:id="@+id/frameLayout_frases"
         android:layout_width="match_parent"
         android:layout_height="79dp"
         android:layout_marginStart="8dp"
@@ -80,28 +80,28 @@
 
 
         <Button
-            android:id="@+id/button_pictogramas"
-            android:layout_width="165dp"
+            android:id="@+id/button_pictogramas_frases"
+            android:layout_width="150dp"
             android:layout_height="55dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="30dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_pictogramas"
-            android:textSize="25sp" />
+            android:text="@string/boton_pictogramas_frases"
+            android:textSize="23sp" />
 
         <Button
-            android:id="@+id/button_lectura_facil"
-            android:layout_width="165dp"
+            android:id="@+id/button_palabra_frases"
+            android:layout_width="150dp"
             android:layout_height="55dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="30dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_lectura_facil"
-            android:textSize="25sp" />
+            android:text="@string/boton_palabra_frases"
+            android:textSize="23sp" />
 
     </RelativeLayout>
 

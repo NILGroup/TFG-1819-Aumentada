@@ -3,12 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <item
-        android:id="@+id/ajustes"
+        android:id="@+id/item_mayus"
+        android:icon="@drawable/mayus"
+        android:title="@string/ajustes_menu"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/item_ajustes"
         android:contentDescription="@string/ajustes_menu"
         android:title="@string/ajustes_menu"></item>
 
     <item
-        android:id="@+id/about_us"
+        android:id="@+id/item_about_us"
         android:icon="@android:drawable/ic_menu_compass"
         android:title="@string/about_us_menu"></item>
 
