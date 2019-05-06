@@ -10,8 +10,8 @@
 
     <LinearLayout
         android:id="@+id/layout_palabras_accion"
-        android:layout_width="392dp"
-        android:layout_height="485dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -50,22 +50,29 @@
             android:layout_marginEnd="20dp"
             android:background="?android:attr/listDivider" />
 
-        <LinearLayout
-            android:id="@+id/layout_palabras_accion_resultado"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:scrollbars="vertical">
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1">
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_palabras_accion_resultado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </ScrollView>
 
 
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/frameLayout_palabras"
-        android:layout_width="395dp"
+        android:layout_width="match_parent"
         android:layout_height="154dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
@@ -99,7 +106,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="30dp"
             android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_dificultad_palabras"
+            android:text="@string/boton_pictogramas_palabras"
             android:textSize="23sp" />
 
         <!-- BOTON SINÓNIMOS -->

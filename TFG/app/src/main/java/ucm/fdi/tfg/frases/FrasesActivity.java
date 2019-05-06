@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,10 +21,16 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import ucm.fdi.tfg.R;
+import ucm.fdi.tfg.TextoOriginalActivity;
 import ucm.fdi.tfg.VARIABLES.Variables;
+import ucm.fdi.tfg.conexionServidor.ConexionSpacy;
+import ucm.fdi.tfg.palabras.PalabrasActivity;
 
 public class FrasesActivity extends AppCompatActivity {
 
@@ -33,11 +40,15 @@ public class FrasesActivity extends AppCompatActivity {
     private String texto_frases;
     private boolean mayus;
 
+    private boolean[] checkBox_seleccionados;
+
+
     // Para el menú
+    private String fichero;
     private String[] elementos_menu;
     private boolean[] elementos_seleccionados;
+    private ArrayList<Integer> elementos = new ArrayList<>();
 
-    private boolean[] checkBox_seleccionados;
 
 
     @Override
@@ -47,9 +58,17 @@ public class FrasesActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        // Para el Menu
+        elementos_menu = getResources().getStringArray(R.array.array_menu);
+        elementos_seleccionados = new boolean[elementos_menu.length];
+
+
+        // Botones que aparecen en la vista
         Button button_pictogramas = findViewById(R.id.button_pictogramas_frases);
         Button button_palabra     = findViewById(R.id.button_palabra_frases);
 
+        // ListView para añadir las frases.
         listView_frases = findViewById(R.id.listView_frases);
 
         // Texto capturado
@@ -89,6 +108,27 @@ public class FrasesActivity extends AppCompatActivity {
 
 
         // ******** PASAR A PALABRA ********
+        button_palabra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int cont = 0, i = 0;
+                while (cont == 0 && i < checkBox_seleccionados.length) {
+                    if (checkBox_seleccionados[i]) {
+                        cont++;
+                    }
+                    i++;
+                }
+                if (cont > 0) {
+                    pulsarBotonPalabras();
+                }
+                else {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(),
+                                    "Selecciona una frase", Toast.LENGTH_SHORT);
+                    toast1.show();
+                }
+            }
+        });
 
     }
 
@@ -103,20 +143,44 @@ public class FrasesActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void pulsarBotonPalabras() {
+        Intent intent = new Intent(this, PalabrasActivity.class);
+        intent.putExtra(Variables.FRASES, checkListAdapter.getFrasesSeleccionadas());
+        intent.putExtra(Variables.MAYUS, mayus);
+        startActivity(intent);
+    }
+
+
+
 
     /**
      * Rellenar los check box con cada una de las frases
      * @param ini Se pasa un booleano para saber si es la primera vez que
-     *            se iniciliza la lista.
+     *            se iniciliza la lista. Esto se hace porque al cambiar de mayusculas
+     *            a minusculas se perdían las frases que se habian marcado.
      */
     private void fillList(boolean ini) {
+
         checkListAdapter = new CheckListAdapter();
-        for(String f : texto_frases.split("\\.")) {
-            checkListAdapter.addFrase(f);
+
+        // Llamamos al servicio Spacy para que devuelva las oraciones
+        try {
+            ConexionSpacy conexionSpacy = new ConexionSpacy(this, texto_frases, "texto", "oraciones");
+            conexionSpacy.start();
+            conexionSpacy.join();
+            ArrayList<String> oraciones = conexionSpacy.getOraciones();
+
+            for(String f : oraciones) {
+                checkListAdapter.addFrase(f.trim());
+            }
+            checkListAdapter.iniSeleccionadas(ini);
+            listView_frases.setAdapter(checkListAdapter);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        checkListAdapter.iniSeleccionadas(ini);
-        listView_frases.setAdapter(checkListAdapter);
     }
+
 
 
     private class CheckListAdapter extends BaseAdapter {
@@ -143,15 +207,15 @@ public class FrasesActivity extends AppCompatActivity {
 
         String getFrasesSeleccionadas() {
 
-            String frases_seleccionadas = "";
+            StringBuilder frases_seleccionadas = new StringBuilder();
 
             for (int i = 0; i < checkBox_seleccionados.length; i++) {
                 if (checkBox_seleccionados[i]) {
-                    frases_seleccionadas += frases.get(i);
+                    frases_seleccionadas.append(frases.get(i));
                 }
             }
 
-            return frases_seleccionadas;
+            return frases_seleccionadas.toString();
         }
 
         @Override
@@ -218,25 +282,18 @@ public class FrasesActivity extends AppCompatActivity {
                 pulsarBotonAboutUs();
                 break;
             case R.id.item_mayus:
-                pulsarItemMayus();
+                Toast toast1 =
+                        Toast.makeText(getApplicationContext(),
+                                "Captura un texto", Toast.LENGTH_SHORT);
+
+                toast1.show();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void pulsarItemMayus(){
-        // Cambia mayusculas o minusculas segun pulsemos el boton
-        if (mayus) {
-            mayus = false;
-            texto_frases = texto_frases.toLowerCase();
-        }
-        else {
-            mayus = true;
-            texto_frases = texto_frases.toUpperCase();
-        }
-        fillList(false);
-    }
+
 
     private void pulsarBotonAboutUs() {
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(FrasesActivity.this);
@@ -254,22 +311,61 @@ public class FrasesActivity extends AppCompatActivity {
         ad.show();
     }
 
+
+
     private void pulsarBotonAjustes() {
+
+        try {
+            BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput("servicios.txt")));
+            for (int i = 0; i < elementos_seleccionados.length; i++) {
+                if (fin.readLine().equals("1")){
+                    elementos_seleccionados[i] = true;
+                }
+                else {
+                    elementos_seleccionados[i] = false;
+                }
+            }
+            fin.close();
+        } catch (Exception ex) {
+            Log.e("Ficheros", "Error al leer fichero desde memoria interna");
+        }
+
+
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(FrasesActivity.this);
         adBuilder.setTitle("SELECCIONA LAS OPCIONES");
         adBuilder.setMultiChoiceItems(elementos_menu, elementos_seleccionados, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                /*if(isChecked){
-
-                }*/
+                if(isChecked){
+                    if (!elementos.contains(which)){
+                        elementos.add(which);
+                    }
+                    else {
+                        elementos.remove(which);
+                    }
+                }
             }
         });
         adBuilder.setCancelable(false);
         adBuilder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                fichero = "";
+                for (int i = 0; i < elementos_seleccionados.length; i++) {
+                    if (elementos_seleccionados[i]) {
+                        fichero += "1\n";
+                    }
+                    else {
+                        fichero += "0\n";
+                    }
+                }
+                try {
+                    OutputStreamWriter fout= new OutputStreamWriter(openFileOutput("servicios.txt", Context.MODE_PRIVATE));
+                    fout.write(fichero);
+                    fout.close();
+                } catch (Exception ex) {
+                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
+                }
             }
         });
 
@@ -285,6 +381,13 @@ public class FrasesActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 for(int i = 0; i < elementos_seleccionados.length; i++) {
                     elementos_seleccionados[i] = true;
+                }
+                try {
+                    OutputStreamWriter fout= new OutputStreamWriter(openFileOutput("servicios.txt", Context.MODE_PRIVATE));
+                    fout.write("1\n1\n1\n1\n");
+                    fout.close();
+                } catch (Exception ex) {
+                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
                 }
             }
         });

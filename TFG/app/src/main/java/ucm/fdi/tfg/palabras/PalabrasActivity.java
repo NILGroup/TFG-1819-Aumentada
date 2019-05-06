@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,23 +16,30 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 import ucm.fdi.tfg.R;
 import ucm.fdi.tfg.VARIABLES.Variables;
+import ucm.fdi.tfg.conexionServidor.ConexionSpacy;
+import ucm.fdi.tfg.frases.FrasesActivity;
 
 public class PalabrasActivity extends AppCompatActivity {
 
-    private TextView textView_palabras;
+    private ArrayList<ArrayList<String>> palabras;
 
-    private String texto_palabras;
     private boolean mayus;
 
-    private GridView gridView_palabras;
-    private GridViewPalabraAdapter gridViewAdapter;
-
     // Para el menú
+    private String fichero;
     private String[] elementos_menu;
     private boolean[] elementos_seleccionados;
+    private ArrayList<Integer> elementos = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle saveInstanceState) {
@@ -40,14 +48,38 @@ public class PalabrasActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        gridView_palabras = (GridView) findViewById(R.id.gridView_palabras);
+        // Para el Menu
+        elementos_menu = getResources().getStringArray(R.array.array_menu);
+        elementos_seleccionados = new boolean[elementos_menu.length];
 
-        texto_palabras = getIntent().getStringExtra(Variables.FRASES);
+        GridView gridView_palabras = findViewById(R.id.gridView_palabras);
+
+        String texto_palabras = getIntent().getStringExtra(Variables.FRASES);
         mayus = getIntent().getBooleanExtra(Variables.MAYUS, false);
 
+        fillGrid(texto_palabras);
+
         // Crea los grids para los pictos
-        gridViewAdapter = new GridViewPalabraAdapter(texto_palabras.split(" "));
+        GridViewPalabraAdapter gridViewAdapter = new GridViewPalabraAdapter(palabras);
         gridView_palabras.setAdapter(gridViewAdapter);
+
+    }
+
+
+    /**
+     * Dado el texto completo. Llama al servicio Spacy para buscar el lema de las palabras
+     * @param texto_palabras
+     */
+    private void fillGrid(String texto_palabras) {
+
+        try {
+            ConexionSpacy conexionSpacy = new ConexionSpacy(this, texto_palabras, "texto", "morfologico");
+            conexionSpacy.start();
+            conexionSpacy.join();
+            palabras = conexionSpacy.getTextoMorfologico();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -55,18 +87,19 @@ public class PalabrasActivity extends AppCompatActivity {
 
     private class GridViewPalabraAdapter extends BaseAdapter {
 
-        // Array list con todos los pictogramas
-        private String[] palabras;
+        // Array list con todas los palabras
+        private ArrayList<ArrayList<String>> p;
+        // private String[] palabras;
         private LayoutInflater layoutInflater;
         // Un array que llevara la cuenta del pictograma que esta saliendo por pantalla
         private boolean[] palabra_seleccionada;
 
 
-        private GridViewPalabraAdapter(String[] palabras) {
+        private GridViewPalabraAdapter(ArrayList<ArrayList<String>> palabras) {
             super();
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            this.palabras = palabras;
-            this.palabra_seleccionada = new boolean[this.palabras.length];
+            p = palabras;
+            this.palabra_seleccionada = new boolean[p.size()];
             for (int i = 0; i < palabra_seleccionada.length; i++) {
                 palabra_seleccionada[i] = false;
             }
@@ -74,12 +107,12 @@ public class PalabrasActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return palabras.length;
+            return p.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return palabras[position];
+            return palabras.get(position);
         }
 
         @Override
@@ -96,11 +129,12 @@ public class PalabrasActivity extends AppCompatActivity {
             // PALABRA !!!!!!!!
             holder.textView = convertView.findViewById(R.id.textView_muestra_palabras);
             // Poner nombre de picto
-            holder.textView.setText(palabras[position]);
+
+            holder.textView.setText(p.get(position).get(1));
             holder.textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    pasarAPalabrasAccion(palabras[position]);
+                    pasarAPalabrasAccion(position);
                 }
             });
 
@@ -122,11 +156,12 @@ public class PalabrasActivity extends AppCompatActivity {
     }
 
 
-    private void pasarAPalabrasAccion(String palabra) {
+    private void pasarAPalabrasAccion(int i) {
         Intent intent = new Intent(this, PalabrasAccionActivity.class);
-        intent.putExtra(Variables.FRASES, palabra);
+        intent.putExtra(Variables.FRASES, palabras.get(i));
         startActivity(intent);
     }
+
 
 
 
@@ -147,28 +182,21 @@ public class PalabrasActivity extends AppCompatActivity {
                 pulsarBotonAboutUs();
                 break;
             case R.id.item_mayus:
-                pulsarItemMayus();
+                Toast toast1 =
+                        Toast.makeText(getApplicationContext(),
+                                "Captura un texto", Toast.LENGTH_SHORT);
+
+                toast1.show();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void pulsarItemMayus(){
-        // Cambia mayusculas o minusculas segun pulsemos el boton
-        if (mayus) {
-            mayus = false;
-            texto_palabras = texto_palabras.toLowerCase();
-        }
-        else {
-            mayus = true;
-            texto_palabras = texto_palabras.toUpperCase();
-        }
-        // textView_original.setText(texto_original);
-    }
+
 
     private void pulsarBotonAboutUs() {
-        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(PalabrasActivity.this);
         adBuilder.setTitle("LeeFácil");
         adBuilder.setMessage("HOLAAA");
         adBuilder.setCancelable(false);
@@ -183,22 +211,61 @@ public class PalabrasActivity extends AppCompatActivity {
         ad.show();
     }
 
+
+
     private void pulsarBotonAjustes() {
-        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(this);
+
+        try {
+            BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput("servicios.txt")));
+            for (int i = 0; i < elementos_seleccionados.length; i++) {
+                if (fin.readLine().equals("1")){
+                    elementos_seleccionados[i] = true;
+                }
+                else {
+                    elementos_seleccionados[i] = false;
+                }
+            }
+            fin.close();
+        } catch (Exception ex) {
+            Log.e("Ficheros", "Error al leer fichero desde memoria interna");
+        }
+
+
+        final AlertDialog.Builder adBuilder = new AlertDialog.Builder(PalabrasActivity.this);
         adBuilder.setTitle("SELECCIONA LAS OPCIONES");
         adBuilder.setMultiChoiceItems(elementos_menu, elementos_seleccionados, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                // if(isChecked){
-
-                // }
+                if(isChecked){
+                    if (!elementos.contains(which)){
+                        elementos.add(which);
+                    }
+                    else {
+                        elementos.remove(which);
+                    }
+                }
             }
         });
         adBuilder.setCancelable(false);
         adBuilder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                fichero = "";
+                for (int i = 0; i < elementos_seleccionados.length; i++) {
+                    if (elementos_seleccionados[i]) {
+                        fichero += "1\n";
+                    }
+                    else {
+                        fichero += "0\n";
+                    }
+                }
+                try {
+                    OutputStreamWriter fout= new OutputStreamWriter(openFileOutput("servicios.txt", Context.MODE_PRIVATE));
+                    fout.write(fichero);
+                    fout.close();
+                } catch (Exception ex) {
+                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
+                }
             }
         });
 
@@ -214,6 +281,13 @@ public class PalabrasActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 for(int i = 0; i < elementos_seleccionados.length; i++) {
                     elementos_seleccionados[i] = true;
+                }
+                try {
+                    OutputStreamWriter fout= new OutputStreamWriter(openFileOutput("servicios.txt", Context.MODE_PRIVATE));
+                    fout.write("1\n1\n1\n1\n");
+                    fout.close();
+                } catch (Exception ex) {
+                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
                 }
             }
         });

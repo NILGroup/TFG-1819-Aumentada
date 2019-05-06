@@ -1,10 +1,14 @@
 package ucm.fdi.tfg.conexionServidor;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -14,75 +18,100 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import ucm.fdi.tfg.R;
 import ucm.fdi.tfg.VARIABLES.Variables;
 
 public class ConexionPICTAR extends Thread {
 
-    private String url = Variables.PICTAR;
+    private String url = "";
     private String json_result;
     private ArrayList<ArrayList<String>> resultado = new ArrayList<ArrayList<String>>();
+    private boolean conexionOK = false;
 
-    public ConexionPICTAR(String cadena) {
 
+    public ConexionPICTAR(String cadena, Context c) {
+
+        hallarUrl(c);
+
+        if (url != "") {
+            try {
+                url += URLEncoder.encode(cadena, "UTF-8").replaceAll("\\+", "%20");
+                conexionOK = true;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void hallarUrl(Context c) {
         try {
-            url += URLEncoder.encode(cadena, "UTF-8").replaceAll("\\+", "%20");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            InputStream fraw = c.getResources().openRawResource(R.raw.pictar1);
+            BufferedReader brin = new BufferedReader(new InputStreamReader(fraw));
+            this.url = brin.readLine();
+            fraw.close();
+        }
+        catch (Exception ex) {
+            Log.e("Ficheros", "Error al leer fichero desde recurso raw");
         }
     }
+
 
     public ArrayList<ArrayList<String>> getResultado() {
         return this.resultado;
     }
 
+
+
     @Override
     public void run() {
-        URL obj;
-        try {
-            obj = new URL(url);
+        if (conexionOK) {
+            URL obj;
+            try {
+                obj = new URL(url);
 
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-            con.setRequestMethod("GET");
+                con.setRequestMethod("GET");
 
-            // int responseCode = con.getResponseCode();
+                // int responseCode = con.getResponseCode();
 
-            if (con.getResponseCode() == 200) {
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
+                if (con.getResponseCode() == 200) {
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(con.getInputStream()));
 
-                String inputLine;
+                    String inputLine;
 
-                StringBuffer response = new StringBuffer();
+                    StringBuffer response = new StringBuffer();
 
-                while ((inputLine = in.readLine()) != null) {
-                    // System.out.println(inputLine);
-                    response.append(inputLine);
+                    while ((inputLine = in.readLine()) != null) {
+                        // System.out.println(inputLine);
+                        response.append(inputLine);
+                    }
+
+                    in.close();
+
+                    this.json_result = response.toString();
                 }
 
-                in.close();
+                con.disconnect();
 
-                this.json_result = response.toString();
+                // Procesa el resultado
+                procesaResultado();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            con.disconnect();
-
-            // Procesa el resultado
-            procesaResultado();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-
     /**
      * Con el resultado devuelto por la conexion. Se procesa el Json
-     * PICTAR no devuelve un JSON como tal.
+     * pictar1 no devuelve un JSON como tal.
      * Por tanto,
      *      1. separamos cada elementos en array
      *      2. quitamos las comillas

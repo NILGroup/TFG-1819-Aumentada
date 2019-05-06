@@ -2,7 +2,7 @@
     <string name="app_name">LeeFácil</string>
 
     <string name="ok">OK</string>
-    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="permission_camera_rationale">Es necesario acceder a la cámara</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Ocr dependencies cannot be downloaded due to low device storage</string>
     <string name="title_activity_main">NOMBRE APP</string>
@@ -13,10 +13,6 @@
     <string name="ocr_error">"Error reading text: %1$s"</string>
     <string name="rest">rest</string>
     <string name="title_activity_opciones">opciones</string>
-    <string name="sinonimos">SINÓNIMOS</string>
-    <string name="antonimos">ANTÓNIMOS</string>
-    <string name="definicion">DEFINICIÓN</string>
-    <string name="selecciona_botones">Selecciona una opción</string>
 
     <!-- MAIN -->
     <string name="auto_focus">Auto Focus</string>
@@ -49,26 +45,20 @@
     <!-- ACTIVITY PALABRAS -->
     <string name="texto_palabras">SELECCIONA UNA PALABRA</string>
     <string name="boton_definicion_palabras">DEFINICIÓN</string>
-    <string name="boton_dificultad_palabras">DIFICULTAD</string>
+    <string name="boton_pictogramas_palabras">PICTOGRAMA</string>
     <string name="boton_sinonimos_palabras">SINÓNIMOS</string>
     <string name="boton_antonimos_palabras">ANTÓNIMOS</string>
-
-
 
 
     <!-- MENU -->
     <string-array name="array_menu">
         <item>DEFINICIÓN</item>
-        <item>PALABRAS PARECIDAS</item>
-        <item>PALABRAS DISTINTAS</item>
-        <item>DIFICULTAD DE PALABRA</item>
+        <item>SINÓNIMOS</item>
+        <item>ANTÓNIMOS</item>
         <item>PICTOGRAMAS</item>
     </string-array>
+
     <string name="ajustes_menu">AJUSTES</string>
     <string name="about_us_menu">SOBRE LeeFácil</string>
 
-    <!-- RESUMEN -->
-    <string name="boton_original">VOLVER A TEXTO ORIGINAL</string>
-    <string name="texto_opcion_resumen">TEXTO RESUMIDO</string>
-    <string name="boton_mayusA">PASAR A MINÚSCULAS</string>
 </resources>
