@@ -20,6 +20,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -48,21 +49,32 @@ public class ConexionAPI extends Thread {
     private ArrayList<String> resultado = new ArrayList<>();
 
 
+    // Para controlar errores
+    private boolean tieneResultado = true;
 
-    public ConexionAPI(Context c, String servicio, String palabra) {
+
+    public ConexionAPI(Context c, String palabra, String servicio ) {
 
         this.c = c;
         this.servicio = servicio;
-        this.palabra  = palabra;
+        String cadenaNormalize = Normalizer.normalize(palabra, Normalizer.Form.NFD);
+        this.palabra = cadenaNormalize.replaceAll("[^\\p{ASCII}]", "");
 
         // Buscamos la URL del servicio
         buscarUrl();
+
+        System.out.println(this.palabra);
     }
 
+
+    public boolean tieneResultado() {
+        return this.tieneResultado;
+    }
 
     public ArrayList<String> getResultado() {
         return this.resultado;
     }
+
 
 
     private void buscarUrl() {
@@ -71,6 +83,7 @@ public class ConexionAPI extends Thread {
             BufferedReader brin = new BufferedReader(new InputStreamReader(fraw));
             // URL A LA QUE TENEMOS QUE ACCEDER
             this.urlPath = brin.readLine() + this.servicio + JSON + URLEncoder.encode(this.palabra, "UTF-8");
+            System.out.println(this.urlPath);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -168,20 +181,33 @@ public class ConexionAPI extends Thread {
             switch (this.servicio) {
                 case "definicion":
                     jsonArray = jsonObject.optJSONArray("definiciones");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        this.resultado.add(jsonArray.getJSONObject(i).getString("definicion"));
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            this.resultado.add(jsonArray.getJSONObject(i).getString("definicion"));
+                        }
+                    }
+                    else {
+                        this.tieneResultado = false;
                     }
                     break;
                 case "sinonimos":
                     jsonArray = jsonObject.optJSONArray("sinonimos");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        this.resultado.add(jsonArray.getJSONObject(i).getString("sinonimo"));
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            this.resultado.add(jsonArray.getJSONObject(i).getString("sinonimo"));
+                        }
+                    } else {
+                      this.tieneResultado = false;
                     }
                     break;
                 case "antonimos":
                     jsonArray = jsonObject.optJSONArray("antonimos");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        this.resultado.add(jsonArray.getJSONObject(i).getString("antonimo"));
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            this.resultado.add(jsonArray.getJSONObject(i).getString("antonimo"));
+                        }
+                    } else {
+                      this.tieneResultado = false;
                     }
                     break;
             }

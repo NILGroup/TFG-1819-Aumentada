@@ -1,22 +1,17 @@
 package ucm.fdi.tfg;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import ucm.fdi.tfg.ocr.OcrCaptureActivity;
@@ -29,7 +24,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CompoundButton useFlash;
 
     // Para el menú
-    private String fichero;
     private String[] elementos_menu;
     private boolean[] elementos_seleccionados;
     private ArrayList<Integer> elementos = new ArrayList<>();
@@ -47,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         useFlash = findViewById(R.id.use_flash);
 
         findViewById(R.id.imageView_camara).setOnClickListener(this);
-
 
 
         elementos_menu = getResources().getStringArray(R.array.array_menu);
@@ -124,23 +117,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void pulsarBotonAjustes() {
-
-        try {
-            BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput("servicios.txt")));
-            for (int i = 0; i < elementos_seleccionados.length; i++) {
-                if (fin.readLine().equals("1")){
-                    elementos_seleccionados[i] = true;
-                }
-                else {
-                    elementos_seleccionados[i] = false;
-                }
-            }
-            fin.close();
-        } catch (Exception ex) {
-            Log.e("Ficheros", "Error al leer fichero desde memoria interna");
-        }
-
-
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(MainActivity.this);
         adBuilder.setTitle("SELECCIONA LAS OPCIONES");
         adBuilder.setMultiChoiceItems(elementos_menu, elementos_seleccionados, new DialogInterface.OnMultiChoiceClickListener() {
@@ -160,48 +136,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adBuilder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                fichero = "";
-                for (int i = 0; i < elementos_seleccionados.length; i++) {
-                    if (elementos_seleccionados[i]) {
-                        fichero += "1\n";
-                    }
-                    else {
-                        fichero += "0\n";
-                    }
-                }
-                try {
-                    OutputStreamWriter fout= new OutputStreamWriter(openFileOutput("servicios.txt", Context.MODE_PRIVATE));
-                    fout.write(fichero);
-                    fout.close();
-                } catch (Exception ex) {
-                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
-                }
             }
         });
-
         adBuilder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-
         adBuilder.setNeutralButton("SELECCIONAR TODO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 for(int i = 0; i < elementos_seleccionados.length; i++) {
                     elementos_seleccionados[i] = true;
                 }
-                try {
-                    OutputStreamWriter fout= new OutputStreamWriter(openFileOutput("servicios.txt", Context.MODE_PRIVATE));
-                    fout.write("1\n1\n1\n1\n");
-                    fout.close();
-                } catch (Exception ex) {
-                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
-                }
             }
         });
-
         AlertDialog ad = adBuilder.create();
         ad.show();
     }

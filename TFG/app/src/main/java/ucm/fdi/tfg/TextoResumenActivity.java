@@ -1,14 +1,12 @@
 package ucm.fdi.tfg;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,15 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import ucm.fdi.tfg.VARIABLES.Variables;
+import ucm.fdi.tfg.conexionServidor.ConexionGrafeno;
 import ucm.fdi.tfg.frases.FrasesActivity;
 import ucm.fdi.tfg.palabras.PalabrasActivity;
+
 
 public class TextoResumenActivity extends AppCompatActivity {
 
@@ -35,11 +32,12 @@ public class TextoResumenActivity extends AppCompatActivity {
     private String texto_resumen = "";
     private boolean mayus = false;
 
+
     // Para el menú
-    private String fichero;
     private String[] elementos_menu;
     private boolean[] elementos_seleccionados;
     private ArrayList<Integer> elementos = new ArrayList<>();
+
 
 
     @Override
@@ -56,19 +54,25 @@ public class TextoResumenActivity extends AppCompatActivity {
 
 
         // Botones
-        ImageView imageView_audio = findViewById(R.id.imageView_audio_resumen);
-
+        final ImageView imageView_audio = findViewById(R.id.imageView_audio_resumen);
         Button button_original = findViewById(R.id.button_original_resumen);
         Button button_frases   = findViewById(R.id.button_frases_resumen);
         Button button_palabras = findViewById(R.id.button_palabras_resumen);
 
-        // Texto capurado
+        // TextView donde aparece el texto.
         textView_resumen = findViewById(R.id.textView_resultado_resumen);
 
-        texto_resumen = getIntent().getStringExtra(Variables.FRASES);;
+
+        // Datos del intent anterior.
+        String texto = getIntent().getStringExtra(Variables.FRASES);
         mayus = getIntent().getBooleanExtra(Variables.MAYUS, false);
 
+        // Se actualiza la variable texto_resumen con el resumen.
+        getResumen(texto);
+
+        // Se muestra por la interfaz.
         textView_resumen.setText(texto_resumen);
+
 
 
         // Text to speech
@@ -81,6 +85,7 @@ public class TextoResumenActivity extends AppCompatActivity {
         });
 
 
+
         // ******** TEXT TO SPEECH ********
         imageView_audio.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +95,7 @@ public class TextoResumenActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), "Sonando audio", Toast.LENGTH_SHORT).show();
                     tts.speak(texto_resumen, TextToSpeech.QUEUE_FLUSH, null);
+                    imageView_audio.setImageResource(R.drawable.no_audio);
                 }
             }
         });
@@ -123,6 +129,28 @@ public class TextoResumenActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Dado el texto, se conecta con el servidor grafeno y actualiza la variable resumen.
+     * @param texto texto original
+     */
+    private void getResumen(String texto) {
+
+        try {
+            ConexionGrafeno conexionGrafeno = new ConexionGrafeno(this, texto);
+            conexionGrafeno.start();
+            conexionGrafeno.join();
+            this.texto_resumen =  conexionGrafeno.getResumen();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * Dada una opción, pasa al siguiente activity pasandole los parametros
+     * @param opcion frases, palabras
+     */
     private void pasarASiguienteActivity(String opcion) {
 
         if (tts.isSpeaking()) {
@@ -151,6 +179,25 @@ public class TextoResumenActivity extends AppCompatActivity {
 
     }
 
+
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        if (tts.isSpeaking()) {
+            tts.stop();
+        }
+        //ejecuta super.onBackPressed() para que finalice el metodo cerrando el activity
+        super.onBackPressed();
+    }
+
+
+
+    /****************     MENU     *******************/
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -168,18 +215,25 @@ public class TextoResumenActivity extends AppCompatActivity {
                 pulsarBotonAboutUs();
                 break;
             case R.id.item_mayus:
-                Toast toast1 =
-                        Toast.makeText(getApplicationContext(),
-                                "Captura un texto", Toast.LENGTH_SHORT);
-
-                toast1.show();
+                pulsarItemMayus();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
+    private void pulsarItemMayus(){
+        // Cambia mayusculas o minusculas segun pulsemos el boton
+        if (mayus) {
+            mayus = false;
+            texto_resumen = texto_resumen.toLowerCase();
+        }
+        else {
+            mayus = true;
+            texto_resumen = texto_resumen.toUpperCase();
+        }
+        textView_resumen.setText(texto_resumen);
+    }
 
     private void pulsarBotonAboutUs() {
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(TextoResumenActivity.this);
@@ -200,23 +254,6 @@ public class TextoResumenActivity extends AppCompatActivity {
 
 
     private void pulsarBotonAjustes() {
-
-        try {
-            BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput("servicios.txt")));
-            for (int i = 0; i < elementos_seleccionados.length; i++) {
-                if (fin.readLine().equals("1")){
-                    elementos_seleccionados[i] = true;
-                }
-                else {
-                    elementos_seleccionados[i] = false;
-                }
-            }
-            fin.close();
-        } catch (Exception ex) {
-            Log.e("Ficheros", "Error al leer fichero desde memoria interna");
-        }
-
-
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(TextoResumenActivity.this);
         adBuilder.setTitle("SELECCIONA LAS OPCIONES");
         adBuilder.setMultiChoiceItems(elementos_menu, elementos_seleccionados, new DialogInterface.OnMultiChoiceClickListener() {
@@ -236,49 +273,24 @@ public class TextoResumenActivity extends AppCompatActivity {
         adBuilder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                fichero = "";
-                for (int i = 0; i < elementos_seleccionados.length; i++) {
-                    if (elementos_seleccionados[i]) {
-                        fichero += "1\n";
-                    }
-                    else {
-                        fichero += "0\n";
-                    }
-                }
-                try {
-                    OutputStreamWriter fout= new OutputStreamWriter(openFileOutput("servicios.txt", Context.MODE_PRIVATE));
-                    fout.write(fichero);
-                    fout.close();
-                } catch (Exception ex) {
-                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
-                }
             }
         });
-
         adBuilder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-
         adBuilder.setNeutralButton("SELECCIONAR TODO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 for(int i = 0; i < elementos_seleccionados.length; i++) {
                     elementos_seleccionados[i] = true;
                 }
-                try {
-                    OutputStreamWriter fout= new OutputStreamWriter(openFileOutput("servicios.txt", Context.MODE_PRIVATE));
-                    fout.write("1\n1\n1\n1\n");
-                    fout.close();
-                } catch (Exception ex) {
-                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
-                }
             }
         });
-
         AlertDialog ad = adBuilder.create();
         ad.show();
     }
+
 }
