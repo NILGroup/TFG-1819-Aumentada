@@ -43,8 +43,6 @@ public class PalabrasAccionActivity extends AppCompatActivity {
     private ArrayList<String> palabra;
     private boolean mayus;
     private String urlPath;
-    private String resultado;
-
 
     ArrayList<ArrayList<String>> res;
     private int pictos;
@@ -242,8 +240,6 @@ public class PalabrasAccionActivity extends AppCompatActivity {
                     re.append(r);
                     re.append("\n");
                 }
-
-                this.resultado = re.toString();
 
                 if (mayus) {
                     textView_resultado.setText(re.toString().toUpperCase());
