@@ -36,7 +36,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:text="@string/texto_resumen"
-            android:textSize="23sp" />
+            android:textSize="23sp"
+            android:textStyle="bold"/>
 
         <Space
             android:layout_width="match_parent"
@@ -99,7 +100,7 @@
 
         <Button
             android:id="@+id/button_frases_resumen"
-            android:layout_width="150dp"
+            android:layout_width="155dp"
             android:layout_height="55dp"
             android:layout_above="@+id/button_palabras_resumen"
             android:layout_alignParentEnd="true"
@@ -111,7 +112,7 @@
 
         <Button
             android:id="@+id/button_original_resumen"
-            android:layout_width="150dp"
+            android:layout_width="155dp"
             android:layout_height="55dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
@@ -123,7 +124,7 @@
 
         <Button
             android:id="@+id/button_palabras_resumen"
-            android:layout_width="150dp"
+            android:layout_width="155dp"
             android:layout_height="55dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"

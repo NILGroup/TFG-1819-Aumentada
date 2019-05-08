@@ -122,7 +122,7 @@ public class ConexionGrafeno extends Thread {
             out.write(jsonParam.toString());
             out.close();
 
-            // int responseCode = con.getResponseCode();
+            System.out.println("GRAFENO:" + urlConnection.getResponseCode());
             if (urlConnection.getResponseCode() == 200) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 

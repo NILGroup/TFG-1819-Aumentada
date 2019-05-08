@@ -39,7 +39,7 @@ public class ConexionSpacy extends Thread {
     private String analisis;
     private String urlPath;
 
-    private String resultado;
+    private String resultado = "";
     private String morfologico;
     private ArrayList<String> oraciones;
     private ArrayList<String> sinonimos;
@@ -55,6 +55,11 @@ public class ConexionSpacy extends Thread {
 
         // Buscamos la url, en funcion del servicio
         hallarUrl(c);
+    }
+
+
+    public String getResultado() {
+        return this.resultado;
     }
 
     /**
@@ -191,6 +196,7 @@ public class ConexionSpacy extends Thread {
                     break;
             }
 
+            System.out.println("SPACY: " + urlConnection.getResponseCode());
             // int responseCode = con.getResponseCode();
             if (urlConnection.getResponseCode() == 200) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));

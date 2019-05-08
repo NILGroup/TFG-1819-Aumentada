@@ -94,13 +94,6 @@ public class FrasesActivity extends AppCompatActivity {
                         seleccionado = true;
                     }
                 }
-
-                /*for (int i = 0; i < checkBox_seleccionados.length; i++) {
-                    if (checkBox_seleccionados[i]) {
-
-                        seleccionado = true;
-                    }
-                }*/
                 if (!seleccionado) {
                     Toast toast1 =
                             Toast.makeText(getApplicationContext(),

@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,10 +27,15 @@ import ucm.fdi.tfg.palabras.PalabrasActivity;
 
 public class TextoResumenActivity extends AppCompatActivity {
 
-    TextView textView_resumen;
-    TextToSpeech tts;
+    // Donde se muestra el resumen del texto
+    private TextView textView_resumen;
+    private ImageView imageView_audio;
+    // Lectura en voz alta
+    private TextToSpeech tts;
 
+    // Donde se guarda el resumen del texto
     private String texto_resumen = "";
+    // Para cambiar de mayusculas a minusculas o viceversa
     private boolean mayus = false;
 
 
@@ -37,7 +43,6 @@ public class TextoResumenActivity extends AppCompatActivity {
     private String[] elementos_menu;
     private boolean[] elementos_seleccionados;
     private ArrayList<Integer> elementos = new ArrayList<>();
-
 
 
     @Override
@@ -53,24 +58,22 @@ public class TextoResumenActivity extends AppCompatActivity {
         elementos_seleccionados = new boolean[elementos_menu.length];
 
 
-        // Botones
-        final ImageView imageView_audio = findViewById(R.id.imageView_audio_resumen);
+        // Botones que aparecen el la pantalla
+        imageView_audio = findViewById(R.id.imageView_audio_resumen);
         Button button_original = findViewById(R.id.button_original_resumen);
         Button button_frases   = findViewById(R.id.button_frases_resumen);
         Button button_palabras = findViewById(R.id.button_palabras_resumen);
+
 
         // TextView donde aparece el texto.
         textView_resumen = findViewById(R.id.textView_resultado_resumen);
 
 
         // Datos del intent anterior.
-        String texto = getIntent().getStringExtra(Variables.FRASES);
+        texto_resumen = getIntent().getStringExtra(Variables.FRASES);
         mayus = getIntent().getBooleanExtra(Variables.MAYUS, false);
 
-        // Se actualiza la variable texto_resumen con el resumen.
-        getResumen(texto);
-
-        // Se muestra por la interfaz.
+        // Se muestra el texto resumido.
         textView_resumen.setText(texto_resumen);
 
 
@@ -84,6 +87,11 @@ public class TextoResumenActivity extends AppCompatActivity {
             }
         });
 
+        if (tts.isSpeaking()) {
+            imageView_audio.setImageResource(R.drawable.no_audio);
+        } else {
+            imageView_audio.setImageResource(R.drawable.audio);
+        }
 
 
         // ******** TEXT TO SPEECH ********
@@ -92,6 +100,7 @@ public class TextoResumenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (tts.isSpeaking()) {
                     tts.stop();
+                    imageView_audio.setImageResource(R.drawable.audio);
                 } else {
                     Toast.makeText(getApplicationContext(), "Sonando audio", Toast.LENGTH_SHORT).show();
                     tts.speak(texto_resumen, TextToSpeech.QUEUE_FLUSH, null);
@@ -129,23 +138,6 @@ public class TextoResumenActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * Dado el texto, se conecta con el servidor grafeno y actualiza la variable resumen.
-     * @param texto texto original
-     */
-    private void getResumen(String texto) {
-
-        try {
-            ConexionGrafeno conexionGrafeno = new ConexionGrafeno(this, texto);
-            conexionGrafeno.start();
-            conexionGrafeno.join();
-            this.texto_resumen =  conexionGrafeno.getResumen();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
-
 
     /**
      * Dada una opción, pasa al siguiente activity pasandole los parametros
@@ -155,6 +147,7 @@ public class TextoResumenActivity extends AppCompatActivity {
 
         if (tts.isSpeaking()) {
             tts.stop();
+            imageView_audio.setImageResource(R.drawable.audio);
         }
 
         Intent intent = new Intent();
@@ -176,11 +169,7 @@ public class TextoResumenActivity extends AppCompatActivity {
         intent.putExtra(Variables.MAYUS, mayus);
         // Lanzar activity
         startActivity(intent);
-
     }
-
-
-
 
 
 
@@ -195,8 +184,9 @@ public class TextoResumenActivity extends AppCompatActivity {
 
 
 
-    /****************     MENU     *******************/
 
+
+    /****************     MENU     *******************/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

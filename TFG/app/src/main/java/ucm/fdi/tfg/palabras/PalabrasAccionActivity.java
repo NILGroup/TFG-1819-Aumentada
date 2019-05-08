@@ -62,6 +62,12 @@ public class PalabrasAccionActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        // Para el Menu
+        elementos_menu = getResources().getStringArray(R.array.array_menu);
+        elementos_seleccionados = new boolean[elementos_menu.length];
+
+
         this.urlPath = hallarUrl(this);
 
 
@@ -70,12 +76,12 @@ public class PalabrasAccionActivity extends AppCompatActivity {
         //      1 - palabra
         //      2 - parte
         palabra = getIntent().getStringArrayListExtra(Variables.FRASES);
+        mayus = getIntent().getBooleanExtra(Variables.MAYUS, false);
+
 
         // TextView para saber con que palabra se está trabajando.
         textView_palabra = findViewById(R.id.textView_palabras_accion);
         textView_palabra.setText("Palabra: " + palabra.get(1));
-
-        mayus = getIntent().getBooleanExtra(Variables.MAYUS, false);
 
 
         // Para mostrar el resultado de los sevicios.
@@ -164,7 +170,7 @@ public class PalabrasAccionActivity extends AppCompatActivity {
     private void buscaPicto() {
 
         // Establecer la conexion con el servidor pictar1
-        ConexionPICTAR conexionPICTAR = new ConexionPICTAR(palabra.get(0), this);
+        ConexionPICTAR conexionPICTAR = new ConexionPICTAR(palabra.get(1), this);
         conexionPICTAR.start();
 
         try {

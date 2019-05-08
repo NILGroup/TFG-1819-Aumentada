@@ -3,9 +3,6 @@ package ucm.fdi.tfg.conexionServidor;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,16 +21,15 @@ import ucm.fdi.tfg.VARIABLES.Variables;
 public class ConexionPICTAR extends Thread {
 
     private String url = "";
-    private String json_result;
     private ArrayList<ArrayList<String>> resultado = new ArrayList<ArrayList<String>>();
     private boolean conexionOK = false;
 
 
     public ConexionPICTAR(String cadena, Context c) {
 
-        hallarUrl(c);
+        buscarUrl(c);
 
-        if (url != "") {
+        if (!url.equals("")) {
             try {
                 url += URLEncoder.encode(cadena, "UTF-8").replaceAll("\\+", "%20");
                 conexionOK = true;
@@ -44,7 +40,7 @@ public class ConexionPICTAR extends Thread {
 
     }
 
-    private void hallarUrl(Context c) {
+    private void buscarUrl(Context c) {
         try {
             InputStream fraw = c.getResources().openRawResource(R.raw.pictar1);
             BufferedReader brin = new BufferedReader(new InputStreamReader(fraw));
@@ -60,7 +56,6 @@ public class ConexionPICTAR extends Thread {
     public ArrayList<ArrayList<String>> getResultado() {
         return this.resultado;
     }
-
 
 
     @Override
@@ -91,13 +86,12 @@ public class ConexionPICTAR extends Thread {
 
                     in.close();
 
-                    this.json_result = response.toString();
+                    con.disconnect();
+
+                    // Procesa el resultado
+                    procesaResultado(response.toString());
                 }
 
-                con.disconnect();
-
-                // Procesa el resultado
-                procesaResultado();
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -109,6 +103,7 @@ public class ConexionPICTAR extends Thread {
         }
     }
 
+
     /**
      * Con el resultado devuelto por la conexion. Se procesa el Json
      * pictar1 no devuelve un JSON como tal.
@@ -117,34 +112,30 @@ public class ConexionPICTAR extends Thread {
      *      2. quitamos las comillas
      *      3. si no hay pictos
      */
-    private void procesaResultado(){
+    private void procesaResultado(String resultado){
 
-        JsonParser parser = new JsonParser();
-        JsonElement datos = parser.parse(this.json_result);
+        if (!resultado.equals("[]")) {
+            String[] array_info = resultado.substring(2, resultado.length() - 2).split("\",\"");
 
-        for (int i = 0; i < datos.getAsJsonArray().size(); i++) {
-            String aux = datos.getAsJsonArray().get(i).toString().replaceAll("\"", "");
-            this.resultado.add(i, new ArrayList<String>());
-            if (aux.length() > 15 && aux.substring(0, 15).equals(Variables.WORD_NOT_FOUND)) {
-                // Primer elemento: palabra
-                this.resultado.get(i).add(aux.substring(16));
-                // Primer elemento: palabra
-                this.resultado.get(i).add(Variables.PICTOS_NOT_FOUND);
-            }
-            else {
-                // Primer elemento: palabra
-                this.resultado.get(i).add(aux.substring(aux.indexOf("]") + 2, aux.length()));
-                // Segundo elemento: pictos
-                for (String s : aux.substring(aux.indexOf("[") + 1, aux.indexOf("]")).split(", ")){
-                    this.resultado.get(i).add(s);
+            for (int i = 0; i < array_info.length; i++) {
+                String aux = array_info[i].replaceAll("\"", "");
+                this.resultado.add(i, new ArrayList<String>());
+                if (aux.length() > 15 && aux.substring(0, 15).equals(Variables.WORD_NOT_FOUND)) {
+                    // Primer elemento: palabra
+                    this.resultado.get(i).add(aux.substring(16));
+                    // Primer elemento: palabra
+                    this.resultado.get(i).add(Variables.PICTOS_NOT_FOUND);
+                }
+                else {
+                    // Primer elemento: palabra
+                    this.resultado.get(i).add(aux.substring(aux.indexOf("]") + 2, aux.length()));
+                    // Segundo elemento: pictos
+                    for (String s : aux.substring(aux.indexOf("[") + 1, aux.indexOf("]")).split(", ")){
+                        this.resultado.get(i).add(s);
+                    }
                 }
             }
-
-            // for (int j = 0; j < resultado.get(i).size(); j++) {
-               //  System.out.println(resultado.get(i).get(j));
-            // }
         }
-
     }
 
 }

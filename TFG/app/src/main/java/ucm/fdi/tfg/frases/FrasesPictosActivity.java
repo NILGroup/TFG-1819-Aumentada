@@ -34,6 +34,8 @@ public class FrasesPictosActivity extends AppCompatActivity {
 
         String url_pictos = hallarUrl(this);
 
+        TextView textView_trad_pictos = findViewById(R.id.textView_pictos);
+
         // GridView desde la interfaz
         GridView gridView_pictos = findViewById(R.id.gridView_pictos);
 
@@ -44,10 +46,13 @@ public class FrasesPictosActivity extends AppCompatActivity {
         // Establece la conexion con el servidor y devuelve el resultado con los pictos.
         ArrayList<ArrayList<String>> result = estableceConexionPictar(texto_pictos);
 
-
-        // Crea los grids para los pictos
-        GridViewAdapter gridViewAdapter = new GridViewAdapter(result, url_pictos);
-        gridView_pictos.setAdapter(gridViewAdapter);
+        if (result != null) {
+            // Crea los grids para los pictos
+            GridViewAdapter gridViewAdapter = new GridViewAdapter(result, url_pictos);
+            gridView_pictos.setAdapter(gridViewAdapter);
+        } else {
+            textView_trad_pictos.setText("ERROR EN LA TRADUCCIÓN");
+        }
 
     }
 
@@ -92,7 +97,6 @@ public class FrasesPictosActivity extends AppCompatActivity {
 
          return conexionPICTAR.getResultado();
     }
-
 
 
     private class GridViewAdapter extends BaseAdapter {

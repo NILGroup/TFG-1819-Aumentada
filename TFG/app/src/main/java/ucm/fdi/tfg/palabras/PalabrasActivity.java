@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -49,29 +50,52 @@ public class PalabrasActivity extends AppCompatActivity {
         elementos_menu = getResources().getStringArray(R.array.array_menu);
         elementos_seleccionados = new boolean[elementos_menu.length];
 
+        // Grid para mostar las palabras.
         gridView_palabras = findViewById(R.id.gridView_palabras);
 
+        // Desde la vista anterior.
         texto_palabras = getIntent().getStringExtra(Variables.FRASES);
         mayus = getIntent().getBooleanExtra(Variables.MAYUS, false);
 
-
+        // Rellena el grid de palabras, se le pasa true si es la primera vez
+        // que se rellena.
         fillGrid(true);
-
     }
 
 
     /**
      * Dado el texto completo. Llama al servicio Spacy para buscar el lema de las palabras
-     * @param ini
+     * @param ini primera vez?
      */
     private void fillGrid(boolean ini) {
+
+        palabras = new ArrayList<>();
 
         if (ini) {
             try {
                 ConexionSpacy conexionSpacy = new ConexionSpacy(this, texto_palabras, "texto", "morfologico");
                 conexionSpacy.start();
                 conexionSpacy.join();
-                palabras = conexionSpacy.getTextoMorfologico();
+                int i = 0;
+                if (!conexionSpacy.getResultado().equals("")) {
+                    ArrayList<ArrayList<String>> p = conexionSpacy.getTextoMorfologico();
+                    for (ArrayList<String> aux : p){
+                        if (!aux.get(2).equals("PUNCT")) {
+                            palabras.add(i, new ArrayList<String>());
+                            for (int j = 0; j < aux.size(); j++) {
+                                palabras.get(i).add(aux.get(j));
+                            }
+                            i++;
+                        }
+                    }
+                }
+                else {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(),
+                                    "No se ha podido conectar con el servidor", Toast.LENGTH_SHORT);
+
+                    toast1.show();
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -131,7 +155,6 @@ public class PalabrasActivity extends AppCompatActivity {
 
             // PALABRA !!!!!!!!
             holder.textView = convertView.findViewById(R.id.textView_muestra_palabras);
-            // Poner nombre de picto
 
             holder.textView.setText(p.get(position).get(1));
             holder.textView.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +176,7 @@ public class PalabrasActivity extends AppCompatActivity {
             convertView.setTag(holder);
 
             return convertView;
+
         }
     }
 

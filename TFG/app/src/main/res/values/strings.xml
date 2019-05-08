@@ -27,7 +27,7 @@
     <string name="boton_audio_original">AUDIO</string>
 
     <!-- ACTIVITY TEXTO RESUMEN -->
-    <string name="texto_resumen">TEXTO RESUMIDO</string>
+    <string name="texto_resumen">RESUMEN DEL TEXTO</string>
     <string name="boton_frases_resumen">PALABRA</string>
     <string name="boton_palabras_resumen">FRASES</string>
     <string name="boton_original_resumen">ORIGINAL</string>
