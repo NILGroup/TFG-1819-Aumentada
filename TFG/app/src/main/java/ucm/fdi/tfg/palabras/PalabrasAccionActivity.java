@@ -100,6 +100,7 @@ public class PalabrasAccionActivity extends AppCompatActivity {
                 this.textView_resultado.getPaddingEnd() + 26,
                 this.textView_resultado.getPaddingBottom());
         textView_resultado.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        textView_resultado.setTextColor(getResources().getColor(R.color.letras));
         linearLayout_palabras.addView(this.textView_resultado);
 
 
@@ -273,9 +274,11 @@ public class PalabrasAccionActivity extends AppCompatActivity {
 
 
 
-
-
-
+    @Override
+    public void onBackPressed() {
+        //ejecuta super.onBackPressed() para que finalice el metodo cerrando el activity
+        finish();
+    }
 
 
 

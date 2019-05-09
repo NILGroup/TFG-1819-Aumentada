@@ -99,6 +99,14 @@ public class FrasesPictosActivity extends AppCompatActivity {
     }
 
 
+
+    @Override
+    public void onBackPressed() {
+        //ejecuta super.onBackPressed() para que finalice el metodo cerrando el activitys
+        finish();
+    }
+
+
     private class GridViewAdapter extends BaseAdapter {
 
         // Array list con todos los pictogramas

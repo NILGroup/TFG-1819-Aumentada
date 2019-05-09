@@ -36,6 +36,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:text="@string/texto_resumen"
+            android:textColor="@color/letras"
             android:textSize="23sp"
             android:textStyle="bold"/>
 
@@ -69,7 +70,9 @@
                     android:id="@+id/textView_resultado_resumen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="23sp" />
+                    android:textSize="25sp"
+                    android:lineSpacingExtra="3dp"
+                    android:textColor="@color/letras"/>
             </LinearLayout>
         </ScrollView>
 

@@ -36,7 +36,7 @@ public class TextoOriginalActivity extends AppCompatActivity {
     // Donde se guarda el texto capturado
     private String texto_original = "";
     // Donde se guarda el resumen del texto capturado.
-    private String texto_resumen;
+    private String texto_resumen = "";
     // Para saber si esta en mayusculas o minusculas.
     private boolean mayus = false;
 
@@ -226,6 +226,11 @@ public class TextoOriginalActivity extends AppCompatActivity {
                 break;
             case "resumen":
                 intent = new Intent(this, TextoResumenActivity.class);
+                if (mayus) {
+                    texto_resumen = texto_resumen.toUpperCase();
+                } else {
+                    texto_resumen = texto_resumen.toLowerCase();
+                }
                 intent.putExtra(Variables.FRASES, texto_resumen);
                 intent.putExtra(Variables.MAYUS, mayus);
                 // Lanzar activity
@@ -280,12 +285,10 @@ public class TextoOriginalActivity extends AppCompatActivity {
         if (mayus) {
             mayus = false;
             texto_original = texto_original.toLowerCase();
-            texto_resumen = texto_resumen.toLowerCase();
         }
         else {
             mayus = true;
             texto_original = texto_original.toUpperCase();
-            texto_resumen = texto_resumen.toUpperCase();
         }
         textView_original.setText(texto_original);
     }

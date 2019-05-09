@@ -15,6 +15,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -32,6 +33,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:text="@string/texto_palabras"
+            android:textColor="@color/letras"
             android:textSize="23sp"
             android:textStyle="bold" />
 
@@ -55,7 +57,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:numColumns="auto_fit"
+            android:numColumns="3"
             android:verticalSpacing="10dp" />
 
     </LinearLayout>

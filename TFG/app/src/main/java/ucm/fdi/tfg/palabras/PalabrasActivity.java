@@ -69,9 +69,8 @@ public class PalabrasActivity extends AppCompatActivity {
      */
     private void fillGrid(boolean ini) {
 
-        palabras = new ArrayList<>();
-
         if (ini) {
+            palabras = new ArrayList<>();
             try {
                 ConexionSpacy conexionSpacy = new ConexionSpacy(this, texto_palabras, "texto", "morfologico");
                 conexionSpacy.start();
@@ -156,14 +155,6 @@ public class PalabrasActivity extends AppCompatActivity {
             // PALABRA !!!!!!!!
             holder.textView = convertView.findViewById(R.id.textView_muestra_palabras);
 
-            holder.textView.setText(p.get(position).get(1));
-            holder.textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pasarAPalabrasAccion(position);
-                }
-            });
-
             if (!ini){
                 if (mayus) {
                     holder.textView.setText(p.get(position).get(1).toUpperCase());
@@ -172,6 +163,18 @@ public class PalabrasActivity extends AppCompatActivity {
                     holder.textView.setText(p.get(position).get(1).toLowerCase());
                 }
             }
+            else {
+                holder.textView.setText(p.get(position).get(1));
+            }
+
+            holder.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pasarAPalabrasAccion(position);
+                }
+            });
+
+
 
             convertView.setTag(holder);
 
@@ -190,6 +193,15 @@ public class PalabrasActivity extends AppCompatActivity {
         intent.putExtra(Variables.FRASES, palabras.get(i));
         intent.putExtra(Variables.MAYUS, mayus);
         startActivity(intent);
+    }
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        //ejecuta super.onBackPressed() para que finalice el metodo cerrando el activitys
+        finish();
     }
 
 

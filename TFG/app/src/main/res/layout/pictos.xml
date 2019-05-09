@@ -18,9 +18,10 @@
         android:id="@+id/textView_pictos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="23sp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:lines="3"/>
+        android:lines="3"
+        android:textColor="@color/letras"/>
 
 </LinearLayout>

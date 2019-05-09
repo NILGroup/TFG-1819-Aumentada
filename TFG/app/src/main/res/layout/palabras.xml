@@ -11,6 +11,7 @@
         android:id="@+id/textView_muestra_palabras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="23sp" />
+        android:textSize="23sp"
+        android:textColor="@color/letras"/>
 
 </LinearLayout>

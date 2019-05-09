@@ -151,6 +151,7 @@ public class TextoResumenActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent();
+        String aux_resumen = texto_resumen.replace("\n", " ");
 
         // Intent para pasar al siguiente Activity
         switch (opcion) {
@@ -165,7 +166,7 @@ public class TextoResumenActivity extends AppCompatActivity {
         // Pasamos los datos:
         // 1. El texto completo
         // 2. Si esta en mayusculas o minusculas.
-        intent.putExtra(Variables.FRASES, texto_resumen);
+        intent.putExtra(Variables.FRASES, aux_resumen);
         intent.putExtra(Variables.MAYUS, mayus);
         // Lanzar activity
         startActivity(intent);

@@ -37,6 +37,7 @@ public class FrasesActivity extends AppCompatActivity {
 
     private String texto_frases;
     private boolean mayus;
+    ArrayList<String> oraciones;
 
     // Las frases que se han seleccioonado
     private boolean[] checkBox_seleccionados;
@@ -92,6 +93,7 @@ public class FrasesActivity extends AppCompatActivity {
                     if (ok) {
                         pulsarBotonPictogramas();
                         seleccionado = true;
+                        break;
                     }
                 }
                 if (!seleccionado) {
@@ -114,6 +116,7 @@ public class FrasesActivity extends AppCompatActivity {
                     if (ok) {
                         pulsarBotonPalabras();
                         seleccionado = true;
+                        break;
                     }
                 }
                 if (!seleccionado) {
@@ -156,23 +159,42 @@ public class FrasesActivity extends AppCompatActivity {
      */
     private void fillList(boolean ini) {
 
-        checkListAdapter = new CheckListAdapter();
+        if (ini) {
+            checkListAdapter = new CheckListAdapter();
 
-        // Llamamos al servicio Spacy para que devuelva las oraciones
-        try {
-            ConexionSpacy conexionSpacy = new ConexionSpacy(this, texto_frases, "texto", "oraciones");
-            conexionSpacy.start();
-            conexionSpacy.join();
-            ArrayList<String> oraciones = conexionSpacy.getOraciones();
+            // Llamamos al servicio Spacy para que devuelva las oraciones
+            try {
+                ConexionSpacy conexionSpacy = new ConexionSpacy(this, texto_frases, "texto", "oraciones");
+                conexionSpacy.start();
+                conexionSpacy.join();
+                oraciones = conexionSpacy.getOraciones();
+
+                for(String f : oraciones) {
+                    checkListAdapter.addFrase(f.trim());
+                }
+                checkListAdapter.iniSeleccionadas(ini);
+                listView_frases.setAdapter(checkListAdapter);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } else {
+            checkListAdapter = null;
+            checkListAdapter = new CheckListAdapter();
 
             for(String f : oraciones) {
-                checkListAdapter.addFrase(f.trim());
+                if (mayus){
+                    checkListAdapter.addFrase(f.trim().toUpperCase());
+                }
+                else {
+                    checkListAdapter.addFrase(f.trim().toLowerCase());
+                }
+
             }
+
             checkListAdapter.iniSeleccionadas(ini);
             listView_frases.setAdapter(checkListAdapter);
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -206,7 +228,7 @@ public class FrasesActivity extends AppCompatActivity {
 
             for (int i = 0; i < checkBox_seleccionados.length; i++) {
                 if (checkBox_seleccionados[i]) {
-                    frases_seleccionadas.append(frases.get(i));
+                    frases_seleccionadas.append(frases.get(i).trim() + " ");
                 }
             }
 
@@ -264,7 +286,11 @@ public class FrasesActivity extends AppCompatActivity {
 
 
 
-
+    @Override
+    public void onBackPressed() {
+        //ejecuta super.onBackPressed() para que finalice el metodo cerrando el activitys
+        finish();
+    }
 
 
 
