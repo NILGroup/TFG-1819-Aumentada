@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/button_botones"
+        android:layout_width="165dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="30dp"
+        android:layout_weight="1"
+        android:background="@drawable/boton_pulsado"
+        android:textSize="23sp" />
+
+</LinearLayout>

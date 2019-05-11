@@ -110,7 +110,7 @@ public class ConexionPICTAR extends Thread {
      * Por tanto,
      *      1. separamos cada elementos en array
      *      2. quitamos las comillas
-     *      3. si no hay pictos
+     *      3. si no hay u_pictos_frases
      */
     private void procesaResultado(String resultado){
 
@@ -129,7 +129,7 @@ public class ConexionPICTAR extends Thread {
                 else {
                     // Primer elemento: palabra
                     this.resultado.get(i).add(aux.substring(aux.indexOf("]") + 2, aux.length()));
-                    // Segundo elemento: pictos
+                    // Segundo elemento: u_pictos_frases
                     for (String s : aux.substring(aux.indexOf("[") + 1, aux.indexOf("]")).split(", ")){
                         this.resultado.get(i).add(s);
                     }

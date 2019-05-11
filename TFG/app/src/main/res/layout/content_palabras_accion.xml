@@ -11,18 +11,19 @@
     <LinearLayout
         android:id="@+id/layout_palabras_accion"
         android:layout_width="match_parent"
-        android:layout_height="@+id/frameLayout_palabras"
+        android:layout_height="@+id/horizontalScrollView_palabras_botones"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout_palabras"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView_palabras_botones"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
+
 
         <Space
             android:layout_width="match_parent"
@@ -35,8 +36,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:textSize="23sp"
-            android:textStyle="bold"
-            android:textColor="@color/letras"/>
+            android:textStyle="bold" />
 
         <Space
             android:layout_width="match_parent"
@@ -56,87 +56,41 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/frameLayout_palabras">
+            android:layout_weight="1">
 
             <LinearLayout
                 android:id="@+id/layout_palabras_accion_resultado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/frameLayout_palabras">
-
+                android:orientation="vertical">
             </LinearLayout>
+
         </ScrollView>
 
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/frameLayout_palabras"
-        android:layout_width="match_parent"
-        android:layout_height="154dp"
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView_palabras_botones"
+        android:layout_width="0dp"
+        android:layout_height="90dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:scrollbarAlwaysDrawHorizontalTrack="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- BOTON DEFINICION -->
-        <Button
-            android:id="@+id/button_definicion_palabras"
-            android:layout_width="155dp"
-            android:layout_height="55dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_definicion_palabras"
-            android:textSize="23sp" />
+        <LinearLayout
+            android:id="@+id/linearLayour_palabras_botones"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        </LinearLayout>
 
-        <!-- BOTON DIFICULTAD -->
-        <Button
-            android:id="@+id/button_pictograma_palabras"
-            android:layout_width="155dp"
-            android:layout_height="55dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_pictogramas_palabras"
-            android:textSize="23sp" />
 
-        <!-- BOTON SINÓNIMOS -->
-        <Button
-            android:id="@+id/button_sinonimos_palabras"
-            android:layout_width="155dp"
-            android:layout_height="55dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_sinonimos_palabras"
-            android:textSize="23sp" />
 
-        <!-- BOTON ANTÓNIMOS -->
-        <Button
-            android:id="@+id/button_antonimos_palabras"
-            android:layout_width="155dp"
-            android:layout_height="55dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_antonimos_palabras"
-            android:textSize="23sp" />
+    </HorizontalScrollView>
 
-    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

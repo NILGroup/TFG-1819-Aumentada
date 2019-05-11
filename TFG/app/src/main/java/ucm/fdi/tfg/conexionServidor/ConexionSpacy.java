@@ -90,7 +90,7 @@ public class ConexionSpacy extends Thread {
     }
 
     /**
-     * Devuelve el analisis morfologico de todas las palabras dentro de un texto
+     * Devuelve el analisis morfologico de todas las u_palabras dentro de un texto
      * @return morfologico
      */
     public ArrayList<ArrayList<String>> getTextoMorfologico() {
@@ -115,7 +115,7 @@ public class ConexionSpacy extends Thread {
                     this.urlPath = brin.readLine() + this.analisis;
                     break;
                 // Si usamos el servicio de PALABRAS
-                case "palabras":
+                case "u_palabras":
                     fraw = c.getResources().openRawResource(R.raw.spacypalabras);
                     brin = new BufferedReader(new InputStreamReader(fraw));
                     // Codificamos la palabra
@@ -191,7 +191,7 @@ public class ConexionSpacy extends Thread {
                     break;
 
                 // SERVICIO PALABRAS
-                case "palabras":
+                case "u_palabras":
                     urlConnection.setRequestMethod("GET");
                     break;
             }
@@ -271,7 +271,7 @@ public class ConexionSpacy extends Thread {
                                 }
                         }
                         break;
-                    case "palabras":
+                    case "u_palabras":
                         switch (analisis) {
                             case "morfologico":
                                 this.morfologico = new JSONObject(this.resultado).getJSONObject("morfologico").getString("lema");

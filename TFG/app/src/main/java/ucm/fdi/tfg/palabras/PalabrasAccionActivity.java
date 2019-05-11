@@ -3,12 +3,12 @@ package ucm.fdi.tfg.palabras;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,25 +33,27 @@ import ucm.fdi.tfg.conexionServidor.ConexionPICTAR;
 
 public class PalabrasAccionActivity extends AppCompatActivity {
 
-
     private LinearLayout linearLayout_palabras;
+    private LinearLayout linearLayout_resultado_servicios;
+    private LinearLayout linearLayout_resultado_pictograma;
 
     private TextView textView_palabra;
     private TextView textView_resultado;
     private ImageView imageView_resultado;
 
+    private StringBuilder re;
+
     private ArrayList<String> palabra;
     private boolean mayus;
-    private String urlPath;
 
     ArrayList<ArrayList<String>> res;
     private int pictos;
 
+    private String urlPath;
 
     // Para el menú
     private String[] elementos_menu;
     private boolean[] elementos_seleccionados;
-    private ArrayList<Integer> elementos = new ArrayList<>();
 
 
 
@@ -62,13 +64,21 @@ public class PalabrasAccionActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         // Para el Menu
         elementos_menu = getResources().getStringArray(R.array.array_menu);
         elementos_seleccionados = new boolean[elementos_menu.length];
 
+        // Para mostrar el resultado de los sevicios.
+        this.linearLayout_palabras = findViewById(R.id.layout_palabras_accion_resultado);
 
-        this.urlPath = hallarUrl(this);
+        // Crear la parte de los botones
+        // Se pasa true si es la primera vez que se crea
+        crearBotonesServicios(true);
+
+
+        // Buscar la segunda url de PICTAR para mostrar los u_pictos_frases
+        buscarURL(this);
+
 
 
         // Desde Palabras Activity se le pasa un arrayList de 3 elementos
@@ -84,156 +94,196 @@ public class PalabrasAccionActivity extends AppCompatActivity {
         textView_palabra.setText("Palabra: " + palabra.get(1));
 
 
-        // Para mostrar el resultado de los sevicios.
-        this.linearLayout_palabras = findViewById(R.id.layout_palabras_accion_resultado);
+        muestraResultados();
 
-        // Para mostrar el picto
-        this.imageView_resultado = new ImageView(getApplicationContext());
+        muestraPictos();
 
-        // Para mostrar el resto de los servicios
-        this.textView_resultado = new TextView(getApplicationContext());
-        this.textView_resultado.setText("Selecciona una opción");
-        this.textView_resultado.setTextSize(23);
-        this.textView_resultado.setPaddingRelative(
-                this.textView_resultado.getPaddingStart() + 26,
-                this.textView_resultado.getPaddingTop(),
-                this.textView_resultado.getPaddingEnd() + 26,
-                this.textView_resultado.getPaddingBottom());
-        textView_resultado.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        textView_resultado.setTextColor(getResources().getColor(R.color.letras));
-        linearLayout_palabras.addView(this.textView_resultado);
+    }
 
+    /**
+     * Crea los u_boton en funcion de los servicios que se han seleccionado.
+     */
+    private void crearBotonesServicios(boolean ini) {
 
-        // Botones de toda la pantalla
-        Button button_definicion = findViewById(R.id.button_definicion_palabras);
-        Button button_pictograma = findViewById(R.id.button_pictograma_palabras);
-        Button button_sinonimos  = findViewById(R.id.button_sinonimos_palabras);
-        Button button_antonimos  = findViewById(R.id.button_antonimos_palabras);
+        // Actualiza los servicios seleccionados.
+        actualizarServiciosSeleccionados();
 
+        LinearLayout linearLayout_botones = findViewById(R.id.linearLayour_palabras_botones);
 
+        if (!ini) {
+            linearLayout_botones.removeAllViews();
+        }
 
-        button_definicion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buscaResultado("definicion");
+        for (int i = 0; i < elementos_seleccionados.length; i++) {
+            if (elementos_seleccionados[i]) {
+                // Creamos el layout con el boton
+                LinearLayout linearLayout_boton = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.u_boton,null);
+                Button boton = linearLayout_boton.findViewById(R.id.button_botones);
+
+                // Ponemos nombre al boton
+                boton.setText(elementos_menu[i]);
+                // implementamos el evento
+                boton.setOnClickListener(misEventosButton);
+
+                // Añadimos los u_boton a la vista
+                linearLayout_botones.addView(linearLayout_boton);
             }
-        });
+        }
 
-        button_pictograma.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buscaPicto();
-            }
-        });
-
-        button_sinonimos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buscaResultado("sinonimos");
-            }
-        });
-
-        button_antonimos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buscaResultado("antonimos");
-            }
-        });
+        // Esto es por diseño, dejar un espacio cuando se acaban de poner los u_boton
+        // para que no esten pegados al borde de la pantalla.
+        LinearLayout linearLayout_espacio = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.u_space,null);
+        linearLayout_botones.addView(linearLayout_espacio);
 
     }
 
 
+    /**
+     * Actualiza el array elementos_seleccionados
+     */
+    private void actualizarServiciosSeleccionados() {
+        SharedPreferences preferences = getSharedPreferences("servicios", Context.MODE_PRIVATE);
+        elementos_seleccionados[0] = preferences.getBoolean("definicion", true);
+        elementos_seleccionados[1] = preferences.getBoolean("sinonimos", true);
+        elementos_seleccionados[2] = preferences.getBoolean("antonimos", true);
+        elementos_seleccionados[3] = preferences.getBoolean("pictograma", true);
+    }
+
+    private View.OnClickListener misEventosButton = new View.OnClickListener() {
+        public void onClick(View v) {
+            // Castemos la variable v (View) para que este se convierta en un boton
+            Button objBoton = (Button) v;
+            // Conectamos con el servicio correspondiente
+            conectarConServicioAPI(objBoton.getText().toString());
+        }
+    };
+
 
     /**
-     * Busca el fichero con la url correspondiente.
+     * Busca el fichero con la url pictar2.
      * @param c context
-     * @return devuelve la url.
      */
-    private String hallarUrl(Context c) {
-        String url = "";
+    private void buscarURL(Context c) {
         try {
             InputStream fraw = c.getResources().openRawResource(R.raw.pictar2);
             BufferedReader brin = new BufferedReader(new InputStreamReader(fraw));
-            url = brin.readLine();
+            this.urlPath = brin.readLine();
             fraw.close();
         }
         catch (Exception ex) {
             Log.e("Ficheros", "Error al leer fichero desde recurso raw");
         }
+    }
 
-        return url;
+    /**
+     * Muestra los resultados del resto de servicios.
+     */
+    private void muestraResultados() {
+        linearLayout_resultado_servicios = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.u_palabra_resultado,null);
+        textView_resultado = linearLayout_resultado_servicios.findViewById(R.id.textView_palabra_resultado);
+
+        textView_resultado.setText("Selecciona una opción");
+
+        // linearLayout_palabras.removeAllViews();
+        linearLayout_palabras.addView(linearLayout_resultado_servicios);
+    }
+
+    /**
+     * Muestra los pictogramas.
+     */
+    private void muestraPictos() {
+        linearLayout_resultado_pictograma = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.u_picto_palabra,null);
+        // Para mostrar el picto
+        this.imageView_resultado = linearLayout_resultado_pictograma.findViewById(R.id.imageView_picto_palabra);
     }
 
 
+    /**
+     * Dado el nombre del boton, llama a la funcion correspondiente.
+     * @param nombre_boton nombre
+     */
+    public void conectarConServicioAPI(String nombre_boton) {
+
+        if (nombre_boton.equals(elementos_menu[3])) {
+            buscaPicto();
+        } else {
+            String aux = "";
+            if (nombre_boton.equals(elementos_menu[0])) {
+                aux = "definicion";
+            } else if (nombre_boton.equals(elementos_menu[1])) {
+                aux = "sinonimos";
+            } else if (nombre_boton.equals(elementos_menu[2])) {
+                aux = "antonimos";
+            }
+            buscaResultado(aux);
+        }
+    }
 
 
-
+    /**
+     * Llamamos al servicio de Spacy para buscar el pictograma asociado a la palabra.
+     * Mostramos el pictograma.
+     */
     private void buscaPicto() {
 
-        // Establecer la conexion con el servidor pictar1
-        ConexionPICTAR conexionPICTAR = new ConexionPICTAR(palabra.get(1), this);
-        conexionPICTAR.start();
-
         try {
+            // Establecer la conexion con el servidor pictar1
+            ConexionPICTAR conexionPICTAR = new ConexionPICTAR(palabra.get(1), this);
+            conexionPICTAR.start();
             conexionPICTAR.join();
+
+            res = conexionPICTAR.getResultado();
+            pictos = 1;
+
+            // Si pulsamos en la imagen
+            imageView_resultado.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // AQUI CAMBIAMOS EL PICTO!!!!!!
+                    // El array siempre tendra 2 elementos. Por tanto si hay 3 o mas elementos
+                    // significa que tendrá mas de 1 pictograma
+                    if (res.get(0).size() > 2) {
+                        if (pictos < res.get(0).size() - 1) {
+                            pictos += 1;
+                        } else {
+                            pictos = 1;
+                        }
+                        Picasso.get().load(urlPath + res.get(0).get(pictos)).into(imageView_resultado);
+                    }
+                }
+            });
+
+            // Poner imagen
+            if (res.get(0).get(pictos).equals(Variables.PICTOS_NOT_FOUND)) {
+                // Si la palabra no tiene pictogramas. Pone una imagen -> una x roja
+                imageView_resultado.setImageResource(R.drawable.pictos_not_found);
+                Toast toast1 = Toast.makeText(getApplicationContext(),
+                                "Esta palabra no tiene pictograma", Toast.LENGTH_SHORT);
+                toast1.show();
+            } else {
+                // Si la palabra o frase tiene pictograma,
+                // selecciona el primer pictograma del array
+                Picasso.get().load(urlPath + res.get(0).get(pictos)).into(imageView_resultado);
+            }
+
+            linearLayout_palabras.removeAllViews();
+            linearLayout_palabras.addView(this.linearLayout_resultado_pictograma);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        res = conexionPICTAR.getResultado();
-        pictos = 1;
-
-        // si pulsamos en la imagen
-        imageView_resultado.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // AQUI CAMBIAMOS EL PICTO!!!!!!
-                // El array siempre tendra 2 elementos. Por tanto si hay 3 o mas elementos
-                // significa que tendrá mas de 1 pictograma
-                if (res.get(0).size() > 2) {
-                    if (pictos < res.get(0).size() - 1) {
-                        pictos += 1;
-                    }
-                    else {
-                        pictos = 1;
-                    }
-                    Picasso.get()
-                            .load(urlPath +
-                                    res.get(0).get(pictos))
-                            .into(imageView_resultado);
-                }
-
-            }
-        });
-
-        // Poner imagen
-        if (res.get(0).get(pictos).equals(Variables.PICTOS_NOT_FOUND)) {
-            // Si la palabra no tiene pictogramas. Pone una imagen -> una x roja
-            Bitmap bmp;
-            bmp = BitmapFactory.decodeResource(getResources(), R.drawable.pictos_not_found);
-            bmp = Bitmap.createScaledBitmap(bmp, 500, 500, true);
-            imageView_resultado.setImageBitmap(bmp);
-            Toast toast1 =
-                    Toast.makeText(getApplicationContext(),
-                            "Esta palabra no tiene pictograma", Toast.LENGTH_SHORT);
-
-            toast1.show();
-            // imageView_resultado.setImageResource(R.drawable.pictos_not_found);
-        } else {
-            // Si la palabra o frase tiene pictograma,
-            // selecciona el primer pictograma del array
-            Picasso.get().load(urlPath + res.get(0).get(pictos)).into(imageView_resultado);
-        }
-
-        linearLayout_palabras.removeView(this.textView_resultado);
-        linearLayout_palabras.addView(this.imageView_resultado);
     }
 
 
+    /**
+     * Dado un servicio, llamamos al servicio web de API accesibilidad.
+     * Mostramos el resultado por pantalla
+     * @param servicio definicion, sinonimos, anonimos.
+     */
     private void buscaResultado(String servicio) {
 
         try {
-
             ConexionAPI conexionAPI = new ConexionAPI(this, this.palabra.get(0), servicio);
             conexionAPI.start();
             conexionAPI.join();
@@ -241,7 +291,7 @@ public class PalabrasAccionActivity extends AppCompatActivity {
             if (conexionAPI.tieneResultado()) {
                 ArrayList<String> resultado = conexionAPI.getResultado();
 
-                StringBuilder re = new StringBuilder();
+                re = new StringBuilder();
                 for (String r : resultado) {
                     re.append("*  ");
                     re.append(r);
@@ -250,19 +300,16 @@ public class PalabrasAccionActivity extends AppCompatActivity {
 
                 if (mayus) {
                     textView_resultado.setText(re.toString().toUpperCase());
-                }else {
+                } else {
                     textView_resultado.setText(re.toString().toLowerCase());
                 }
 
-
                 linearLayout_palabras.removeAllViews();
-                linearLayout_palabras.addView(this.textView_resultado);
+                linearLayout_palabras.addView(this.linearLayout_resultado_servicios);
             }
             else {
-                Toast toast1 =
-                        Toast.makeText(getApplicationContext(),
+                Toast toast1 = Toast.makeText(getApplicationContext(),
                                 "No se ha podido encontrar el resultado", Toast.LENGTH_SHORT);
-
                 toast1.show();
             }
 
@@ -273,12 +320,19 @@ public class PalabrasAccionActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
         //ejecuta super.onBackPressed() para que finalice el metodo cerrando el activity
         finish();
     }
+
+
+
+
+
+
+
+
 
 
 
@@ -317,14 +371,19 @@ public class PalabrasAccionActivity extends AppCompatActivity {
         if (mayus) {
             mayus = false;
             textView_palabra.setText("Palabra: " + palabra.get(1).toLowerCase());
+            if (re != null) {
+                textView_resultado.setText(re.toString().toLowerCase());
+            }
         }
         else {
             mayus = true;
             textView_palabra.setText("Palabra: " + palabra.get(1).toUpperCase());
+            if (re != null) {
+                textView_resultado.setText(re.toString().toUpperCase());
+            }
         }
-
-
     }
+
 
     private void pulsarBotonAboutUs() {
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(PalabrasAccionActivity.this);
@@ -345,41 +404,39 @@ public class PalabrasAccionActivity extends AppCompatActivity {
 
 
     private void pulsarBotonAjustes() {
+
+        SharedPreferences preferences = getSharedPreferences("servicios", Context.MODE_PRIVATE);
+        elementos_seleccionados[0] = preferences.getBoolean("definicion", true);
+        elementos_seleccionados[1] = preferences.getBoolean("sinonimos", true);
+        elementos_seleccionados[2] = preferences.getBoolean("antonimos", true);
+        elementos_seleccionados[3] = preferences.getBoolean("pictograma", true);
+
+
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(PalabrasAccionActivity.this);
         adBuilder.setTitle("SELECCIONA LAS OPCIONES");
         adBuilder.setMultiChoiceItems(elementos_menu, elementos_seleccionados, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                if(isChecked){
-                    if (!elementos.contains(which)){
-                        elementos.add(which);
-                    }
-                    else {
-                        elementos.remove(which);
-                    }
-                }
+                elementos_seleccionados[which] = isChecked;
+                // cambiarConfiguracion(isChecked, which);
             }
         });
-        adBuilder.setCancelable(false);
+        adBuilder.setCancelable(true);
         adBuilder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        adBuilder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        adBuilder.setNeutralButton("SELECCIONAR TODO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for(int i = 0; i < elementos_seleccionados.length; i++) {
-                    elementos_seleccionados[i] = true;
+                SharedPreferences preferences = getSharedPreferences("servicios", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                for (int i = 0; i < elementos_seleccionados.length; i++) {
+                    editor.putBoolean(Variables.MENU[i], elementos_seleccionados[i]);
                 }
+                editor.apply();
+
+                dialog.dismiss();
+                crearBotonesServicios(false);
             }
         });
+
         AlertDialog ad = adBuilder.create();
         ad.show();
     }

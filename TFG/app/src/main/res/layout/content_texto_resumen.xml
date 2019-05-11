@@ -70,7 +70,7 @@
                     android:id="@+id/textView_resultado_resumen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="25sp"
+                    android:textSize="23sp"
                     android:lineSpacingExtra="3dp"
                     android:textColor="@color/letras"/>
             </LinearLayout>

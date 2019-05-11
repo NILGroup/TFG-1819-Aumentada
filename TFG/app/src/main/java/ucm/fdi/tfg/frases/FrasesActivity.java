@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -253,7 +254,7 @@ public class FrasesActivity extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView = layoutInflater.inflate(R.layout.fila_frases, null);
+            convertView = layoutInflater.inflate(R.layout.u_frases, null);
             final ViewHolder holder = new ViewHolder();
             holder.chkItem = convertView.findViewById(R.id.check_frases);
             holder.chkItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -355,41 +356,38 @@ public class FrasesActivity extends AppCompatActivity {
 
 
     private void pulsarBotonAjustes() {
+
+        SharedPreferences preferences = getSharedPreferences("servicios", Context.MODE_PRIVATE);
+        elementos_seleccionados[0] = preferences.getBoolean("definicion", true);
+        elementos_seleccionados[1] = preferences.getBoolean("sinonimos", true);
+        elementos_seleccionados[2] = preferences.getBoolean("antonimos", true);
+        elementos_seleccionados[3] = preferences.getBoolean("pictograma", true);
+
+
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(FrasesActivity.this);
         adBuilder.setTitle("SELECCIONA LAS OPCIONES");
         adBuilder.setMultiChoiceItems(elementos_menu, elementos_seleccionados, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                if(isChecked){
-                    if (!elementos.contains(which)){
-                        elementos.add(which);
-                    }
-                    else {
-                        elementos.remove(which);
-                    }
-                }
+                elementos_seleccionados[which] = isChecked;
+                // cambiarConfiguracion(isChecked, which);
             }
         });
-        adBuilder.setCancelable(false);
+        adBuilder.setCancelable(true);
         adBuilder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        adBuilder.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences preferences = getSharedPreferences("servicios", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                for (int i = 0; i < elementos_seleccionados.length; i++) {
+                    editor.putBoolean(Variables.MENU[i], elementos_seleccionados[i]);
+                }
+                editor.apply();
+
                 dialog.dismiss();
             }
         });
-        adBuilder.setNeutralButton("SELECCIONAR TODO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for(int i = 0; i < elementos_seleccionados.length; i++) {
-                    elementos_seleccionados[i] = true;
-                }
-            }
-        });
+
         AlertDialog ad = adBuilder.create();
         ad.show();
     }

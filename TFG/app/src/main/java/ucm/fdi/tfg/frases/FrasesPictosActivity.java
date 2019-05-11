@@ -43,11 +43,11 @@ public class FrasesPictosActivity extends AppCompatActivity {
         String texto_pictos = getIntent().getStringExtra(Variables.FRASES);
         mayus = getIntent().getBooleanExtra(Variables.MAYUS, false);
 
-        // Establece la conexion con el servidor y devuelve el resultado con los pictos.
+        // Establece la conexion con el servidor y devuelve el resultado con los u_pictos_frases.
         ArrayList<ArrayList<String>> result = estableceConexionPictar(texto_pictos);
 
         if (result != null) {
-            // Crea los grids para los pictos
+            // Crea los grids para los u_pictos_frases
             GridViewAdapter gridViewAdapter = new GridViewAdapter(result, url_pictos);
             gridView_pictos.setAdapter(gridViewAdapter);
         } else {
@@ -147,7 +147,7 @@ public class FrasesPictosActivity extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-            convertView = layoutInflater.inflate(R.layout.pictos, null);
+            convertView = layoutInflater.inflate(R.layout.u_pictos_frases, null);
             final ViewHolderGrid holder = new ViewHolderGrid();
 
             // IMAGEN !!!!!!!!!
