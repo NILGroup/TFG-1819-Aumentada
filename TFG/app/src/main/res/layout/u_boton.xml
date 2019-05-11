@@ -8,11 +8,13 @@
 
     <Button
         android:id="@+id/button_botones"
-        android:layout_width="165dp"
+        android:layout_width="180dp"
         android:layout_height="55dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="25dp"
         android:layout_weight="1"
         android:background="@drawable/boton_pulsado"
-        android:textSize="23sp" />
+        android:textSize="23sp"
+        android:text="@string/imagen_pictos"/>
 
 </LinearLayout>

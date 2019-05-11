@@ -11,13 +11,13 @@
     <LinearLayout
         android:id="@+id/layout_frases"
         android:layout_width="match_parent"
-        android:layout_height="@+id/frameLayout_frases"
+        android:layout_height="@+id/horizontalScrollView_botones_frases"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout_frases"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView_botones_frases"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,43 +67,61 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/frameLayout_frases"
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView_botones_frases"
         android:layout_width="match_parent"
-        android:layout_height="79dp"
+        android:layout_height="80dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:fadeScrollbars="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
+        <LinearLayout
+            android:id="@+id/linearLayour_botones_original"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/button_pictogramas_frases"
-            android:layout_width="155dp"
-            android:layout_height="55dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_pictogramas_frases"
-            android:textSize="23sp" />
+            <RelativeLayout
+                android:id="@+id/frameLayout_frases"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="0dp" >
 
-        <Button
-            android:id="@+id/button_palabra_frases"
-            android:layout_width="155dp"
-            android:layout_height="55dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_palabra_frases"
-            android:textSize="23sp" />
 
-    </RelativeLayout>
+                <Button
+                    android:id="@+id/button_pictogramas_frases"
+                    android:layout_width="155dp"
+                    android:layout_height="55dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/boton_pulsado"
+                    android:text="@string/boton_pictogramas_frases"
+                    android:textSize="23sp" />
 
+                <Button
+                    android:id="@+id/button_palabra_frases"
+                    android:layout_width="155dp"
+                    android:layout_height="55dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_toEndOf="@id/button_pictogramas_frases"
+                    android:background="@drawable/boton_pulsado"
+                    android:text="@string/boton_palabra_frases"
+                    android:textSize="23sp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </HorizontalScrollView>
 </android.support.constraint.ConstraintLayout>

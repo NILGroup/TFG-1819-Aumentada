@@ -91,7 +91,8 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         mGraphicOverlay = (GraphicOverlay<OcrGraphic>) findViewById(R.id.graphicOverlay);
 
         // read parameters from the intent used to launch the activity.
-        boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
+        // boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
+        boolean autoFocus = true;
         boolean useFlash  = getIntent().getBooleanExtra(UseFlash, false);
 
         // Check for the camera permission before accessing the camera.  If the

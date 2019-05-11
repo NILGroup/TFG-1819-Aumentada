@@ -47,7 +47,6 @@ public class FrasesActivity extends AppCompatActivity {
     // Para el menú
     private String[] elementos_menu;
     private boolean[] elementos_seleccionados;
-    private ArrayList<Integer> elementos = new ArrayList<>();
 
 
 
@@ -340,9 +339,11 @@ public class FrasesActivity extends AppCompatActivity {
     private void pulsarBotonAboutUs() {
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(FrasesActivity.this);
         adBuilder.setTitle("LeeFácil");
-        adBuilder.setMessage("HOLAAA");
-        adBuilder.setCancelable(false);
-        adBuilder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+        adBuilder.setMessage("Aplicación desarrollada por Elianni Agüero e Ignacio Sande como Trabajo de Fin de Grado.\n" +
+                "Facultad de Informática.\n" +
+                "Universidad Complutense de Madrid");
+        adBuilder.setCancelable(true);
+        adBuilder.setNegativeButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

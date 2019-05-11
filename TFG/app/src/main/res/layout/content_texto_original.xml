@@ -12,13 +12,13 @@
     <LinearLayout
         android:id="@+id/layout_texto_original"
         android:layout_width="match_parent"
-        android:layout_height="@+id/frameLayout_original"
+        android:layout_height="@+id/horizontalScrollView_botones_original"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout_original"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView_botones_original"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,8 @@
             android:layout_weight="1"
             android:scrollbarAlwaysDrawVerticalTrack="true"
             android:scrollbarStyle="outsideInset"
-            android:scrollbars="vertical">
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false">
 
             <LinearLayout
                 android:id="@+id/layout_original_scroll"
@@ -81,65 +82,84 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/frameLayout_original"
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView_botones_original"
         android:layout_width="match_parent"
         android:layout_height="148dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:fadeScrollbars="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView_audio_original"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_above="@+id/button_resumen_original"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="80dp"
-            android:layout_marginBottom="15dp"
-            android:contentDescription="@string/boton_audio_original"
-            app:srcCompat="@drawable/audio" />
+    <LinearLayout
+        android:id="@+id/linearLayour_botones_original"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/button_frases_original"
-            android:layout_width="155dp"
-            android:layout_height="55dp"
-            android:layout_above="@+id/button_palabras_original"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_palabras_original"
-            android:textSize="23sp" />
+            <RelativeLayout
+                android:id="@+id/frameLayout_original"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp" >
 
-        <Button
-            android:id="@+id/button_resumen_original"
-            android:layout_width="155dp"
-            android:layout_height="55dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_resumen_original"
-            android:textSize="23sp" />
+                <ImageView
+                    android:id="@+id/imageView_audio_original"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_above="@+id/button_resumen_original"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginBottom="15dp"
+                    android:contentDescription="@string/boton_audio_original"
+                    app:srcCompat="@drawable/audio" />
 
-        <Button
-            android:id="@+id/button_palabras_original"
-            android:layout_width="155dp"
-            android:layout_height="55dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/boton_pulsado"
-            android:text="@string/boton_frases_original"
-            android:textSize="23sp" />
+                <Button
+                    android:id="@+id/button_frases_original"
+                    android:layout_width="155dp"
+                    android:layout_height="55dp"
+                    android:layout_above="@+id/button_palabras_original"
+                    android:layout_marginStart="75dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_toEndOf="@+id/imageView_audio_original"
+                    android:background="@drawable/boton_pulsado"
+                    android:text="@string/boton_palabras_original"
+                    android:textSize="23sp" />
 
-    </RelativeLayout>
+                <Button
+                    android:id="@+id/button_resumen_original"
+                    android:layout_width="155dp"
+                    android:layout_height="55dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/boton_pulsado"
+                    android:text="@string/boton_resumen_original"
+                    android:textSize="23sp" />
+
+                <Button
+                    android:id="@+id/button_palabras_original"
+                    android:layout_width="155dp"
+                    android:layout_height="55dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_toEndOf="@+id/button_resumen_original"
+                    android:background="@drawable/boton_pulsado"
+                    android:text="@string/boton_frases_original"
+                    android:textSize="23sp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </android.support.constraint.ConstraintLayout>

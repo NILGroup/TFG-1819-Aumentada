@@ -65,7 +65,8 @@
             android:horizontalSpacing="15dp"
             android:numColumns="3"
             android:saveEnabled="false"
-            android:verticalSpacing="30dp" />
+            android:verticalSpacing="30dp"
+            android:fadeScrollbars="false"/>
 
 
     </LinearLayout>

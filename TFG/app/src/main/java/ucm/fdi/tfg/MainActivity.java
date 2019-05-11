@@ -8,18 +8,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 
 import ucm.fdi.tfg.VARIABLES.Variables;
 import ucm.fdi.tfg.ocr.OcrCaptureActivity;
@@ -28,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     // Use a compound button so either checkbox or switch widgets work.
-    private CompoundButton autoFocus;
+    // private CompoundButton autoFocus;
     private CompoundButton useFlash;
 
 
@@ -51,7 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         elementos_seleccionados = new boolean[elementos_menu.length];
 
 
-        autoFocus = findViewById(R.id.auto_focus);
+        // autoFocus = findViewById(R.id.auto_focus);
+        // autoFocus = true;
         useFlash = findViewById(R.id.use_flash);
 
         findViewById(R.id.imageView_camara).setOnClickListener(this);
@@ -80,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.imageView_camara) {
             // Lanzamos Ocr capture activity.
             Intent intent = new Intent(this, OcrCaptureActivity.class);
-            intent.putExtra(OcrCaptureActivity.AutoFocus, autoFocus.isChecked());
+            // intent.putExtra(OcrCaptureActivity.AutoFocus, autoFocus.isChecked());
             intent.putExtra(OcrCaptureActivity.UseFlash, useFlash.isChecked());
 
             startActivity(intent);
@@ -124,9 +118,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void pulsarBotonAboutUs() {
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(MainActivity.this);
         adBuilder.setTitle("LeeFácil");
-        adBuilder.setMessage("HOLAAA");
-        adBuilder.setCancelable(false);
-        adBuilder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+        adBuilder.setMessage("Aplicación desarrollada por Elianni Agüero e Ignacio Sande como Trabajo de Fin de Grado.\n" +
+                "Facultad de Informática.\n" +
+                "Universidad Complutense de Madrid");
+        adBuilder.setCancelable(true);
+        adBuilder.setNegativeButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

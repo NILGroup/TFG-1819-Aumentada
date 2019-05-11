@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,10 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import ucm.fdi.tfg.VARIABLES.Variables;
@@ -46,7 +41,6 @@ public class TextoResumenActivity extends AppCompatActivity {
     // Para el menú
     private String[] elementos_menu;
     private boolean[] elementos_seleccionados;
-    private ArrayList<Integer> elementos = new ArrayList<>();
 
 
     @Override
@@ -233,9 +227,11 @@ public class TextoResumenActivity extends AppCompatActivity {
     private void pulsarBotonAboutUs() {
         final AlertDialog.Builder adBuilder = new AlertDialog.Builder(TextoResumenActivity.this);
         adBuilder.setTitle("LeeFácil");
-        adBuilder.setMessage("HOLAAA");
-        adBuilder.setCancelable(false);
-        adBuilder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+        adBuilder.setMessage("Aplicación desarrollada por Elianni Agüero e Ignacio Sande como Trabajo de Fin de Grado.\n" +
+                "Facultad de Informática.\n" +
+                "Universidad Complutense de Madrid");
+        adBuilder.setCancelable(true);
+        adBuilder.setNegativeButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
